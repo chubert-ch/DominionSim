@@ -6,7 +6,6 @@ public enum DomBotComparator {
    smallerOrEqualThan,
    greaterThan,
    greaterOrEqualThan,
-   
    ;
    
    public String toString() {

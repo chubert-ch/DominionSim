@@ -1,13 +1,61 @@
 package be.aga.dominionSimulator;
 
-import java.awt.*;
-import java.util.*;
+import java.awt.HeadlessException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Observable;
+import java.util.Set;
+import java.util.TreeSet;
 
-import be.aga.dominionSimulator.cards.*;
+import javax.swing.JOptionPane;
+
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Logger;
 import org.apache.log4j.SimpleLayout;
 
+import be.aga.dominionSimulator.cards.Bandit_FortCard;
+import be.aga.dominionSimulator.cards.DiplomatCard;
+import be.aga.dominionSimulator.cards.DoctorCard;
+import be.aga.dominionSimulator.cards.DonateCard;
+import be.aga.dominionSimulator.cards.EnchantressCard;
+import be.aga.dominionSimulator.cards.FarmlandCard;
+import be.aga.dominionSimulator.cards.ForumCard;
+import be.aga.dominionSimulator.cards.FountainCard;
+import be.aga.dominionSimulator.cards.GuideCard;
+import be.aga.dominionSimulator.cards.HagglerCard;
+import be.aga.dominionSimulator.cards.Haunted_WoodsCard;
+import be.aga.dominionSimulator.cards.HeraldCard;
+import be.aga.dominionSimulator.cards.HerbalistCard;
+import be.aga.dominionSimulator.cards.KeepCard;
+import be.aga.dominionSimulator.cards.MasterpieceCard;
+import be.aga.dominionSimulator.cards.MenagerieCard;
+import be.aga.dominionSimulator.cards.MessengerCard;
+import be.aga.dominionSimulator.cards.Mountain_PassCard;
+import be.aga.dominionSimulator.cards.MultiplicationCard;
+import be.aga.dominionSimulator.cards.MuseumCard;
+import be.aga.dominionSimulator.cards.Noble_BrigandCard;
+import be.aga.dominionSimulator.cards.ObeliskCard;
+import be.aga.dominionSimulator.cards.OrchardCard;
+import be.aga.dominionSimulator.cards.PalaceCard;
+import be.aga.dominionSimulator.cards.PortCard;
+import be.aga.dominionSimulator.cards.RatcatcherCard;
+import be.aga.dominionSimulator.cards.Royal_CarriageCard;
+import be.aga.dominionSimulator.cards.SchemeCard;
+import be.aga.dominionSimulator.cards.Secret_ChamberCard;
+import be.aga.dominionSimulator.cards.StonemasonCard;
+import be.aga.dominionSimulator.cards.Swamp_HagCard;
+import be.aga.dominionSimulator.cards.TowerCard;
+import be.aga.dominionSimulator.cards.TraderCard;
+import be.aga.dominionSimulator.cards.TransmogrifyCard;
+import be.aga.dominionSimulator.cards.Triumphal_ArchCard;
+import be.aga.dominionSimulator.cards.WallCard;
+import be.aga.dominionSimulator.cards.WatchtowerCard;
+import be.aga.dominionSimulator.cards.Wolf_DenCard;
 import be.aga.dominionSimulator.enums.DomBotComparator;
 import be.aga.dominionSimulator.enums.DomBotFunction;
 import be.aga.dominionSimulator.enums.DomBotOperator;
@@ -16,8 +64,6 @@ import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 import be.aga.dominionSimulator.enums.DomPhase;
 import be.aga.dominionSimulator.enums.DomPlayStrategy;
-
-import javax.swing.*;
 
 /**
  * Represents a single player in a simulated game.
@@ -150,59 +196,60 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     }
 
     public DomCard findCardToRemodel(DomCard domCard, int theAmount) {
-    	ArrayList<DomCard> theCardsToConsiderTrashing=new ArrayList<DomCard>();
-    	ArrayList<DomCardName> theCardsToGain=new ArrayList<DomCardName>();
-    	DomCardName theDesiredCardIfRemodelNotUsed = getDesiredCard(getTotalPotentialCurrency(), false);
+        ArrayList<DomCard> theCardsToConsiderTrashing = new ArrayList<DomCard>();
+        ArrayList<DomCardName> theCardsToGain = new ArrayList<DomCardName>();
+        DomCardName theDesiredCardIfRemodelNotUsed = getDesiredCard(getTotalPotentialCurrency(), false);
         for (int i=0;i< getCardsInHand().size();i++) {
             if (getCardsInHand().get(i)== domCard)
                 continue;
-        	//temporarily remove the card from hand AND deck
-        	DomCard theCard = getCardsInHand().remove(i);
+            //temporarily remove the card from hand AND deck
+            DomCard theCard = getCardsInHand().remove(i);
             DomCost theMaxCostOfCardToGain = new DomCost( theCard.getCoinCost(getCurrentGame()) + theAmount, theCard.getPotionCost());
-        	getDeck().get(theCard.getName()).remove(theCard );
-      	    DomCardName theRemodelGainCard = getDesiredCard(theMaxCostOfCardToGain, false);
-        	DomCardName theDesiredCard = getDesiredCard(getTotalPotentialCurrency(), false);
-        	//first we will make a list of cards we consider good candidates for trashing
-        	//only add to the list if:
-        	//  -what we will gain is better than the card we trash (so of course it's not null)
-        	//  -(and the card we will gain is better than what we were able to buy without using Remodel
-        	//    or -trashing the card will not hinder our buying potential)
+            getDeck().get(theCard.getName()).remove(theCard);
+            DomCardName theRemodelGainCard = getDesiredCard(theMaxCostOfCardToGain, false);
+            DomCardName theDesiredCard = getDesiredCard(getTotalPotentialCurrency(), false);
+            //first we will make a list of cards we consider good candidates for trashing
+            //only add to the list if:
+            //  -what we will gain is better than the card we trash (so of course it's not null)
+            //  -(and the card we will gain is better than what we were able to buy without using Remodel
+            //    or -trashing the card will not hinder our buying potential)
             if (   (theRemodelGainCard!=null
-            	  && theRemodelGainCard.getTrashPriority(this)>theCard.getName().getTrashPriority(this)
-            	  && (theDesiredCardIfRemodelNotUsed == null
-            	  || theRemodelGainCard.getTrashPriority(this)>=theDesiredCardIfRemodelNotUsed.getTrashPriority(this)
-            	  || theDesiredCard==theDesiredCardIfRemodelNotUsed))){
-				theCardsToConsiderTrashing.add(theCard);
-				theCardsToGain.add(theRemodelGainCard);
+                    && theRemodelGainCard.getTrashPriority(this) > theCard.getName().getTrashPriority(this)
+                    && (theDesiredCardIfRemodelNotUsed == null || theRemodelGainCard
+                            .getTrashPriority(this) >= theDesiredCardIfRemodelNotUsed.getTrashPriority(this)
+                            || theDesiredCard == theDesiredCardIfRemodelNotUsed))) {
+                theCardsToConsiderTrashing.add(theCard);
+                theCardsToGain.add(theRemodelGainCard);
             }
-        	getDeck().get(theCard.getName()).add(theCard );
-        	getCardsInHand().add(i, theCard);
+            getDeck().get(theCard.getName()).add(theCard);
+            getCardsInHand().add(i, theCard);
         }
         //nothing good found
         if (theCardsToConsiderTrashing.isEmpty())
-        	return null;
+            return null;
         //now we scan the lists to find the best possible trashing candidate
         DomCardName theBestCardToGain=null;
         DomCard theBestCardToTrash=null;
         for (int i=0;i<theCardsToGain.size();i++) {
-          DomCardName theCardToGain = theCardsToGain.get(i);
-          if (stillInEarlyGame()){
-	    	if (theBestCardToGain==null
-	        || theCardsToConsiderTrashing.get(i).getTrashPriority()<theBestCardToTrash.getTrashPriority()) {
-	    	    theBestCardToGain=theCardToGain;
-	    	    theBestCardToTrash=theCardsToConsiderTrashing.get(i);
-	    	}
-	      } else {
-	    	  if (theBestCardToGain==null
-	      	   //trashing this card will give us a better card
-	    	   || theCardToGain.getTrashPriority(this)>theBestCardToGain.getTrashPriority(this)
-	           //trashing this card is more desirable while still allowing us to gain the best card
-	    	   || ((theCardToGain.getTrashPriority(this)==theBestCardToGain.getTrashPriority(this)
-	               && theCardsToConsiderTrashing.get(i).getTrashPriority()<theBestCardToTrash.getTrashPriority()))) {
-	    	    theBestCardToGain=theCardToGain;
-	    	    theBestCardToTrash=theCardsToConsiderTrashing.get(i);
-	    	  }
-	      }
+            DomCardName theCardToGain = theCardsToGain.get(i);
+            if (stillInEarlyGame()) {
+                if (theBestCardToGain == null || theCardsToConsiderTrashing.get(i)
+                        .getTrashPriority() < theBestCardToTrash.getTrashPriority()) {
+                    theBestCardToGain = theCardToGain;
+                    theBestCardToTrash = theCardsToConsiderTrashing.get(i);
+                }
+            } else {
+                if (theBestCardToGain == null
+                        //trashing this card will give us a better card
+                        || theCardToGain.getTrashPriority(this) > theBestCardToGain.getTrashPriority(this)
+                        //trashing this card is more desirable while still allowing us to gain the best card
+                        || ((theCardToGain.getTrashPriority(this) == theBestCardToGain.getTrashPriority(this)
+                                && theCardsToConsiderTrashing.get(i).getTrashPriority() < theBestCardToTrash
+                                        .getTrashPriority()))) {
+                    theBestCardToGain = theCardToGain;
+                    theBestCardToTrash = theCardsToConsiderTrashing.get(i);
+                }
+            }
         }
         return theBestCardToTrash;
     }
@@ -243,7 +290,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     }
 
     private DomCost determineCostAndCheckSplitPiles(DomBuyRule theBuyRule) {
-      return determineCostAndCheckSplitPiles(theBuyRule.getCardToBuy());
+        return determineCostAndCheckSplitPiles(theBuyRule.getCardToBuy());
     }
 
     public DomCost determineCostAndCheckSplitPiles(DomCardName theCard) {
@@ -447,13 +494,13 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     }
 
     public void takeTurn() {
-//        for(DomCard theCard : getDeck().getAllCards()) {
-//            if (theCard.owner==null) {
-//                System.out.println("Error, cards in deck with null owner "+ theCard);
+        //        for(DomCard theCard : getDeck().getAllCards()) {
+        //            if (theCard.owner==null) {
+        //                System.out.println("Error, cards in deck with null owner "+ theCard);
 
-//                System.out.println(getDeck());
-//            }
-//        }
+        //                System.out.println(getDeck());
+        //            }
+        //        }
         initializeTurn();
         handleTeachers();
         handleGuides();
@@ -895,7 +942,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
      */
     protected boolean tryToBuy(DomCardName aCardName, boolean checkSuicide) {
         if (game.countInSupply(aCardName) == 0) {
-//          if (DomEngine.haveToLog) DomEngine.addToLog( aCardName + " is no more available to buy");
+            //          if (DomEngine.haveToLog) DomEngine.addToLog( aCardName + " is no more available to buy");
             return false;
         }
         if (checkSuicide && suicideIfBuys(aCardName)) {
@@ -1034,7 +1081,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         if (availableCoins < 0) {
             spendCoinTokens(-availableCoins);
             if (coinTokens < 0) {
-               LOGGER.error("Coin tokens: " + coinTokens);
+                LOGGER.error("Coin tokens: " + coinTokens);
             }
             availableCoins = 0;
         }
@@ -1076,11 +1123,11 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         handleSwampHags();
         handleHauntedWoods();
         if (aCard.hasCardType(DomCardType.Victory) && !getCardsFromHand(DomCardName.Hovel).isEmpty()) {
-          if (isHumanOrPossessedByHuman()
-            && getEngine().getGameFrame().askPlayer("<html>Trash " + DomCardName.Hovel.toHTML() +" ?</html>", "Resolving Hovel" ))
+            if (isHumanOrPossessedByHuman() && getEngine().getGameFrame()
+                    .askPlayer("<html>Trash " + DomCardName.Hovel.toHTML() + " ?</html>", "Resolving Hovel"))
                 trash(removeCardFromHand(getCardsFromHand(DomCardName.Hovel).get(0)));
-          else
-            trash(removeCardFromHand(getCardsFromHand(DomCardName.Hovel).get(0)));
+            else
+                trash(removeCardFromHand(getCardsFromHand(DomCardName.Hovel).get(0)));
         }
     }
 
@@ -1289,7 +1336,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
 
     public void setPhase(DomPhase aPhase) {
         if (aPhase==DomPhase.Buy)
-          maybeHandleArena();
+            maybeHandleArena();
         currentPhase = aPhase;
         myEngine.setStatus("Now in " + currentPhase + " Phase");
     }
@@ -1376,9 +1423,9 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
                     && aCard.getName() != DomCardName.Necropolis
                     && aCard.getName() != DomCardName.Estate
                     && !aCard.hasCardType(DomCardType.Spirit)) {
-              previousPlayedCardName = aCard.getName();
+                previousPlayedCardName = aCard.getName();
             } else {
-              previousPlayedCardName = null;
+                previousPlayedCardName = null;
             }
             sameCardCount = 0;
         } else {
@@ -1729,17 +1776,17 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         if (theCardsNeededForTrashing.isEmpty())
             return;
 
-//    	if (!getCardsFromHand(DomCardName.Bishop).isEmpty()
-//    	 || !getCardsFromHand(DomCardName.Ambassador).isEmpty()	
-//    	 || !getCardsFromHand(DomCardName.Develop).isEmpty()	
-//    	 || !getCardsFromHand(DomCardName.Expand).isEmpty()	
-//    	 || !getCardsFromHand(DomCardName.Masquerade).isEmpty()	
-//    	 || !getCardsFromHand(DomCardName.Remodel).isEmpty()	
-//    	 || !getCardsFromHand(DomCardName.Salvager).isEmpty()	
-//    	 || !getCardsFromHand(DomCardName.Trader).isEmpty()	
-//    	 || !getCardsFromHand(DomCardName.Trade_Route).isEmpty()	
-//    	 || !getCardsFromHand(DomCardName.Transmute).isEmpty()){
-//    	}
+        //    	if (!getCardsFromHand(DomCardName.Bishop).isEmpty()
+        //    	 || !getCardsFromHand(DomCardName.Ambassador).isEmpty()	
+        //    	 || !getCardsFromHand(DomCardName.Develop).isEmpty()	
+        //    	 || !getCardsFromHand(DomCardName.Expand).isEmpty()	
+        //    	 || !getCardsFromHand(DomCardName.Masquerade).isEmpty()	
+        //    	 || !getCardsFromHand(DomCardName.Remodel).isEmpty()	
+        //    	 || !getCardsFromHand(DomCardName.Salvager).isEmpty()	
+        //    	 || !getCardsFromHand(DomCardName.Trader).isEmpty()	
+        //    	 || !getCardsFromHand(DomCardName.Trade_Route).isEmpty()	
+        //    	 || !getCardsFromHand(DomCardName.Transmute).isEmpty()){
+        //    	}
 
         if (!getCardsFromHand(DomCardName.Steward).isEmpty()
                 || !getCardsFromHand(DomCardName.Trading_Post).isEmpty()
@@ -1784,9 +1831,9 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
             //we don't want to mess with a hand if we're going to buy the top card this turn (although we could)
             if (wantsToGainOrKeep(theRule.getCardToBuy())) {
                 if (getDesiredCard(theTotalMoney, false) == theRule.getCardToBuy())
-                  return true;
+                    return true;
                 else
-                  return false;
+                    return false;
             }
         }
         return false;
@@ -1971,7 +2018,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         getDeck().forcedAdd(theCard);
         for (DomPlayer thePlayer : getOpponents()) {
             if (countVictoryPoints() < thePlayer.countVictoryPoints()
-              || (countVictoryPoints() == thePlayer.countVictoryPoints() && getTurns() > thePlayer.getTurns())) {
+                    || (countVictoryPoints() == thePlayer.countVictoryPoints() && getTurns() > thePlayer.getTurns())) {
                 //remove it again
                 getCurrentGame().getBoard().add(getDeck().forcedRemove(theCard));
                 return true;
@@ -1980,16 +2027,16 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
         //remove it again
         getCurrentGame().getBoard().add(getDeck().forcedRemove(theCard));
 
-//        for (DomPlayer thePlayer : getOpponents()) {
-//            if (countVictoryPoints() < thePlayer.countVictoryPoints() - aCardName.getVictoryValue(this)) {
-//                return true;
-//            }
-//            if (countVictoryPoints() == thePlayer.countVictoryPoints() - aCardName.getVictoryValue(this)) {
-//                if (getTurns() > thePlayer.getTurns()) {
-//                    return true;
-//                }
-//            }
-//        }
+        //        for (DomPlayer thePlayer : getOpponents()) {
+        //            if (countVictoryPoints() < thePlayer.countVictoryPoints() - aCardName.getVictoryValue(this)) {
+        //                return true;
+        //            }
+        //            if (countVictoryPoints() == thePlayer.countVictoryPoints() - aCardName.getVictoryValue(this)) {
+        //                if (getTurns() > thePlayer.getTurns()) {
+        //                    return true;
+        //                }
+        //            }
+        //        }
         return false;
     }
 
@@ -2113,7 +2160,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
             if (theCard.getName()==DomCardName.Hovel)
                 continue;
             if (!theCard.hasReacted() && theCard.canReact())
-              theCards.add(theCard.getName());
+                theCards.add(theCard.getName());
         }
         if (theCards.isEmpty())
             return null;
@@ -2660,13 +2707,13 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
                 continue;
             boolean wantsToGain = true;
             for (DomBuyCondition theCondition : theRule.getBuyConditions()) {
-//            	  if (noConstraints && theCondition.getLeftFunction()==DomBotFunction.isActionPhase){
-//            		  //TODO probably remove this...
-//            		  //be very careful: this fix was added so Estates can be gained with Remodel, but their trash priority stays low
-//            		  //so eg Coppers aren't remodeled into Estates before Estates into Caravans
-//            		  wantsToGain=false;
-//            		  break;
-//            	  }
+                //            	  if (noConstraints && theCondition.getLeftFunction()==DomBotFunction.isActionPhase){
+                //            		  //TODO probably remove this...
+                //            		  //be very careful: this fix was added so Estates can be gained with Remodel, but their trash priority stays low
+                //            		  //so eg Coppers aren't remodeled into Estates before Estates into Caravans
+                //            		  wantsToGain=false;
+                //            		  break;
+                //            	  }
                 if (!theCondition.isTrue(possessor != null ? possessor : this)) {
                     wantsToGain = false;
                     break;
@@ -2699,13 +2746,13 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
                 continue;
             boolean wantsToGain = true;
             for (DomBuyCondition theCondition : theRule.getBuyConditions()) {
-//            	  if (noConstraints && theCondition.getLeftFunction()==DomBotFunction.isActionPhase){
-//            		  //TODO probably remove this...
-//            		  //be very careful: this fix was added so Estates can be gained with Remodel, but their trash priority stays low
-//            		  //so eg Coppers aren't remodeled into Estates before Estates into Caravans
-//            		  wantsToGain=false;
-//            		  break;
-//            	  }
+                //            	  if (noConstraints && theCondition.getLeftFunction()==DomBotFunction.isActionPhase){
+                //            		  //TODO probably remove this...
+                //            		  //be very careful: this fix was added so Estates can be gained with Remodel, but their trash priority stays low
+                //            		  //so eg Coppers aren't remodeled into Estates before Estates into Caravans
+                //            		  wantsToGain=false;
+                //            		  break;
+                //            	  }
                 if (!theCondition.isTrue(possessor != null ? possessor : this)) {
                     wantsToGain = false;
                     break;
@@ -3350,7 +3397,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     public void placePlusOneActionToken(DomCardName aCard) {
         plusOneActionTokenOn = aCard;
         if (DomEngine.haveToLog)
-           DomEngine.addToLog(this + " puts +1 Action token on " + aCard.toHTML());
+            DomEngine.addToLog(this + " puts +1 Action token on " + aCard.toHTML());
     }
 
     public void placePlusOneCardToken(DomCardName aCard) {
@@ -3824,7 +3871,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
             handleUrchins(selectedCard);
             play(removeCardFromHand(selectedCard));
             if (selectedCard.getName()!=DomCardName.Royal_Carriage)
-              maybeHandleRoyalCarriage(selectedCard);
+                maybeHandleRoyalCarriage(selectedCard);
             if (actionsLeft == 0 || getCardsFromHand(DomCardType.Action).isEmpty()) {
                 if (getFromTavernMat(DomCardName.Coin_of_the_Realm) != null) {
                     handleCoinOfTheRealm();
@@ -4140,7 +4187,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
     }
 
     public void receiveBoon(DomCard aBoon) {
-       getCurrentGame().getBoard().receiveBoon(this, aBoon);
+        getCurrentGame().getBoard().receiveBoon(this, aBoon);
     }
 
     public void keepBoon(DomCard aBoon) {
@@ -4161,7 +4208,7 @@ public class DomPlayer extends Observable implements Comparable<DomPlayer> {
 
     public void returnDelayedBoons() {
         for (DomCard theBoon : delayedBoons)
-          getCurrentGame().getBoard().returnBoon(theBoon);
+            getCurrentGame().getBoard().returnBoon(theBoon);
         delayedBoons.clear();
     }
 }

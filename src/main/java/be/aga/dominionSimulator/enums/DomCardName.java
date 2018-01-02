@@ -466,7 +466,7 @@ public enum DomCardName  {
      * Used solely for the non-existent card (meant to represent a lack of cards).
      */
     private DomCardName() {
-    	
+
     }
     /**
      * Sole constructor.
@@ -483,30 +483,31 @@ public enum DomCardName  {
      * @param aTypes DomCardType array of all types
      */
     DomCardName(int aCoinCost, int aPotionCost, int aCoinValue, int aVictoryValue, int aPlayPriority, int aDiscardPriority, DomCardType[] aTypes) {
-      cost = new DomCost(aCoinCost, aPotionCost);
-      coinValue = aCoinValue;
-      victoryValue = aVictoryValue;
-      playPriority = aPlayPriority;
-      discardPriority = aDiscardPriority;
-      for (DomCardType theType : aTypes) {
-        types.add( theType );
-      }
-      //TODO Fix constructor to include debt cost
-      if ("Donate".equals(name()) || "Royal_Blacksmith".equals(name()) || "Fortune".equals(name()) || "Overlord".equals(name()) || "Annex".equals(name()) ||"City_Quarter".equals(name())) {
-          cost.setDebt(8);
-      }
-      if ("Triumph".equals(name())) {
-          cost.setDebt(5);
-      }
-      if ("Engineer".equals(name())) {
-          cost.setDebt(4);
-      }
-      if ("Wedding".equals(name())) {
-          cost.setDebt(3);
-      }
+        cost = new DomCost(aCoinCost, aPotionCost);
+        coinValue = aCoinValue;
+        victoryValue = aVictoryValue;
+        playPriority = aPlayPriority;
+        discardPriority = aDiscardPriority;
+        for (DomCardType theType : aTypes) {
+            types.add(theType);
+        }
+        //TODO Fix constructor to include debt cost
+        if ("Donate".equals(name()) || "Royal_Blacksmith".equals(name()) || "Fortune".equals(name())
+                || "Overlord".equals(name()) || "Annex".equals(name()) || "City_Quarter".equals(name())) {
+            cost.setDebt(8);
+        }
+        if ("Triumph".equals(name())) {
+            cost.setDebt(5);
+        }
+        if ("Engineer".equals(name())) {
+            cost.setDebt(4);
+        }
+        if ("Wedding".equals(name())) {
+            cost.setDebt(3);
+        }
     }
 
-    
+
     public static DomCardName[] getSafeValues() {
         ArrayList<DomCardName> theValues = new ArrayList<DomCardName>();
         for (DomCardName theCard : values()){
@@ -536,14 +537,14 @@ public enum DomCardName  {
      * @return
      */
     public DomCard createNewCardInstance() {
-      //TODO look into Dynamic Class Loading (tried it, but took way too long)
-      switch (this) {
+        //TODO look into Dynamic Class Loading (tried it, but took way too long)
+        switch (this) {
         case Abandoned_Mine:
-          return new Abandoned_MineCard();
+            return new Abandoned_MineCard();
         case Advance:
             return new AdvanceCard();
         case Adventurer:
-          return new AdventurerCard();
+            return new AdventurerCard();
         case Advisor:
             return new AdvisorCard();
         case Alchemist:
@@ -1008,14 +1009,14 @@ public enum DomCardName  {
             return new PathfindingCard();
         case Patrician:
             return new PatricianCard();
-	    case Pawn:
-	        return new PawnCard();
-	    case Pearl_Diver:
-	        return new Pearl_DiverCard();
+        case Pawn:
+            return new PawnCard();
+        case Pearl_Diver:
+            return new Pearl_DiverCard();
         case Peasant:
             return new PeasantCard();
-	    case Peddler:
-	        return new PeddlerCard();
+        case Peddler:
+            return new PeddlerCard();
         case Philosopher$s_Stone:
             return new Philosopher$s_StoneCard();
         case Pilgrimage:
@@ -1327,15 +1328,15 @@ public enum DomCardName  {
         case Zombie_Spy:
             return new Zombie_SpyCard();
         default:
-        return new DomCard( this );
-    }
+            return new DomCard(this);
+        }
     }
 
     public DomCost getCost() {
-      return cost;
+        return cost;
     }
     public HashSet<DomCardType> types() {
-      return types;
+        return types;
     }
 
     /**
@@ -1343,38 +1344,38 @@ public enum DomCardName  {
      * @return true iff this card has {@code aCardType}
      */
     public boolean hasCardType( DomCardType aCardType ) {
-      return types.contains( aCardType);
+        return types.contains(aCardType);
     }
 
     public DomPlayStrategy[] getPlayStrategies() {
-    	ArrayList<DomPlayStrategy> theStrategies = new ArrayList<DomPlayStrategy>();
-    	switch (this) {
-		case Ambassador:
+        ArrayList<DomPlayStrategy> theStrategies = new ArrayList<DomPlayStrategy>();
+        switch (this) {
+        case Ambassador:
             theStrategies.add(DomPlayStrategy.ambassadorWar);
-			theStrategies.add(DomPlayStrategy.aggressiveTrashing);
-			break;
+            theStrategies.add(DomPlayStrategy.aggressiveTrashing);
+            break;
 
         case Amulet:
             theStrategies.add(DomPlayStrategy.silverGainer);
             theStrategies.add(DomPlayStrategy.aggressiveTrashing);
             break;
 
-    	case Apothecary:
-			theStrategies.add(DomPlayStrategy.ApothecaryNativeVillage);
-			break;
+        case Apothecary:
+            theStrategies.add(DomPlayStrategy.ApothecaryNativeVillage);
+            break;
 
-		case Chapel:
+        case Chapel:
             theStrategies.add(DomPlayStrategy.aggressiveTrashing);
             theStrategies.add(DomPlayStrategy.keepPayload);
-			break;
+            break;
 
         case Duplicate:
             theStrategies.add(DomPlayStrategy.dukeEnabler);
             break;
 
-		case Governor:
-			theStrategies.add(DomPlayStrategy.GoldEarlyTrashMid);
-			break;
+        case Governor:
+            theStrategies.add(DomPlayStrategy.GoldEarlyTrashMid);
+            break;
 
         case Hermit:
             theStrategies.add(DomPlayStrategy.MarketSquareCombo);
@@ -1402,11 +1403,11 @@ public enum DomCardName  {
             theStrategies.add(DomPlayStrategy.greedyDeckTracker);
             break;
 
-		case Native_Village:
-			theStrategies.add(DomPlayStrategy.bigTurnBridge);
-			theStrategies.add(DomPlayStrategy.bigTurnGoons);
-			theStrategies.add(DomPlayStrategy.ApothecaryNativeVillage);
-			break;
+        case Native_Village:
+            theStrategies.add(DomPlayStrategy.bigTurnBridge);
+            theStrategies.add(DomPlayStrategy.bigTurnGoons);
+            theStrategies.add(DomPlayStrategy.ApothecaryNativeVillage);
+            break;
 
         case Necropolis:
             theStrategies.add(DomPlayStrategy.trashWhenObsolete);
@@ -1416,9 +1417,9 @@ public enum DomCardName  {
             theStrategies.add(DomPlayStrategy.combo);
             break;
 
-		case Pirate_Ship:
-			theStrategies.add(DomPlayStrategy.attackUntil5Coins);
-			break;
+        case Pirate_Ship:
+            theStrategies.add(DomPlayStrategy.attackUntil5Coins);
+            break;
 
         case Ratcatcher:
             theStrategies.add(DomPlayStrategy.aggressiveTrashing);
@@ -1432,13 +1433,13 @@ public enum DomCardName  {
             theStrategies.add(DomPlayStrategy.trashWhenObsolete);
             break;
 
-		case Smithy:
-			theStrategies.add(DomPlayStrategy.playIfNotBuyingTopCard);
-			break;
+        case Smithy:
+            theStrategies.add(DomPlayStrategy.playIfNotBuyingTopCard);
+            break;
 
-		case Spice_Merchant:
-			theStrategies.add(DomPlayStrategy.FoolsGoldEnabler);
-			break;
+        case Spice_Merchant:
+            theStrategies.add(DomPlayStrategy.FoolsGoldEnabler);
+            break;
 
         case Squire:
             theStrategies.add(DomPlayStrategy.silverGainer);
@@ -1458,9 +1459,9 @@ public enum DomCardName  {
             theStrategies.add(DomPlayStrategy.crossroadsCombo);
             break;
 
-		case Tactician:
-			theStrategies.add(DomPlayStrategy.playIfNotBuyingTopCard);
-			break;
+        case Tactician:
+            theStrategies.add(DomPlayStrategy.playIfNotBuyingTopCard);
+            break;
 
         case Wild_Hunt:
             theStrategies.add(DomPlayStrategy.forEngines);
@@ -1471,10 +1472,10 @@ public enum DomCardName  {
             theStrategies.add(DomPlayStrategy.greedyDeckTracker);
             break;
 
-		default:
-			break;
-		}
-		theStrategies.add(0,DomPlayStrategy.standard);
+        default:
+            break;
+        }
+        theStrategies.add(0, DomPlayStrategy.standard);
         return theStrategies.toArray(new DomPlayStrategy[theStrategies.size()]);
     }
 
@@ -1482,18 +1483,18 @@ public enum DomCardName  {
      * @return
      */
     public int getVictoryValue(DomPlayer aPlayer) {
-      switch (this) {
-		case Duke:
-	  	    if (aPlayer != null ) {
-	 	      return aPlayer.countInDeck(Duchy);
-		    }
-	        break;
+        switch (this) {
+        case Duke:
+            if (aPlayer != null) {
+                return aPlayer.countInDeck(Duchy);
+            }
+            break;
 
-		case Fairgrounds:
-			if (aPlayer!=null) {
-		      return aPlayer.countDifferentCardsInDeck()/5*2;
-			}
-		    break;
+        case Fairgrounds:
+            if (aPlayer != null) {
+                return aPlayer.countDifferentCardsInDeck() / 5 * 2;
+            }
+            break;
 
         case Feodum:
             if (aPlayer!=null) {
@@ -1503,58 +1504,58 @@ public enum DomCardName  {
 
         case Gardens:
             if (aPlayer != null ) {
-               return aPlayer.countAllCards()/10;
+                return aPlayer.countAllCards() / 10;
             }
             break;
 
         case Humble_Castle:
-           if (aPlayer != null ) {
-               return aPlayer.count(DomCardType.Castle);
-           }
-           break;
+            if (aPlayer != null) {
+                return aPlayer.count(DomCardType.Castle);
+            }
+            break;
 
         case King$s_Castle:
-           if (aPlayer != null ) {
-             return aPlayer.count(DomCardType.Castle)*2;
-           }
-           break;
+            if (aPlayer != null) {
+                return aPlayer.count(DomCardType.Castle) * 2;
+            }
+            break;
 
         case Pasture:
-           if (aPlayer != null ) {
-               return aPlayer.countInDeck(Estate);
-           }
-           break;
+            if (aPlayer != null) {
+                return aPlayer.countInDeck(Estate);
+            }
+            break;
 
         case Silk_Road:
-           if (aPlayer != null ) {
-              return aPlayer.count(DomCardType.Victory)/4;
-           }
-           break;
+            if (aPlayer != null) {
+                return aPlayer.count(DomCardType.Victory) / 4;
+            }
+            break;
 
         case Vineyard:
-	        if (aPlayer!=null) {
+            if (aPlayer != null) {
                 return aPlayer.count(DomCardType.Action) / 3;
             }
-		    break;
+            break;
 
- 		default:
-    	    break;
-	  }
-      return victoryValue;
+        default:
+            break;
+        }
+        return victoryValue;
     }
 
     /**
      * @return
      */
     public int getCoinValue() {
-      return coinValue;
+        return coinValue;
     }
 
     /**
      * @return
      */
     public int getPlayPriority() {
-      return playPriority;
+        return playPriority;
     }
 
     /**
@@ -1562,26 +1563,26 @@ public enum DomCardName  {
      * @return
      */
     public int getDiscardPriority(int aActionsLeft) {
-      //TODO to review (warehouse draws village + Terminal...)
-      if (aActionsLeft<1 && hasCardType( DomCardType.Action ) )
-        return 1;
-      return discardPriority;
+        //TODO to review (warehouse draws village + Terminal...)
+        if (aActionsLeft < 1 && hasCardType(DomCardType.Action))
+            return 1;
+        return discardPriority;
     }
 
     /**
      * @return
      */
     public int getTrashPriority() {
-      return getDiscardPriority( 1 );
+        return getDiscardPriority(1);
     }
 
     public String toString(){
-      String theString = super.toString().replaceAll( "_", " " ).replaceAll( "\\$", "'" );
-      if (this==DomCardName.Ill_Gotten_Gains)
-    	  return "Ill-Gotten Gains";
-      if (this==DomCardName.Will_o$_Wisp)
-          return "Will-o'-Wisp";
-	  return theString;
+        String theString = super.toString().replaceAll("_", " ").replaceAll("\\$", "'");
+        if (this == DomCardName.Ill_Gotten_Gains)
+            return "Ill-Gotten Gains";
+        if (this == DomCardName.Will_o$_Wisp)
+            return "Will-o'-Wisp";
+        return theString;
     }
 
     public final int getCoinCost( DomGame aDomGame) {
@@ -1589,17 +1590,17 @@ public enum DomCardName  {
             return getCost().getCoins();
         int theCoins = getCost().getCoins();
         if (aDomGame!=null) {
-          if (this==DomCardName.Peddler && aDomGame.isBuyPhase()) {
-            theCoins-=aDomGame.countActionsInPlay()*2;
-          }
-          theCoins-=aDomGame.getBridgesPlayed();
-          theCoins-=aDomGame.getPrincessesInPlay()*2;
-          if (hasCardType(DomCardType.Action))
-            theCoins-=aDomGame.getQuarriesPlayed()*2;
-          theCoins-=aDomGame.getHighwaysInPlay();
-          theCoins-=aDomGame.getBridge_TrollsInPlay();
-          if (aDomGame.getActivePlayer()!=null)
-            theCoins-=aDomGame.getActivePlayer().getMinus$2TokenOn()==isFromPile() ? 2 : 0;
+            if (this == DomCardName.Peddler && aDomGame.isBuyPhase()) {
+                theCoins -= aDomGame.countActionsInPlay() * 2;
+            }
+            theCoins -= aDomGame.getBridgesPlayed();
+            theCoins -= aDomGame.getPrincessesInPlay() * 2;
+            if (hasCardType(DomCardType.Action))
+                theCoins -= aDomGame.getQuarriesPlayed() * 2;
+            theCoins -= aDomGame.getHighwaysInPlay();
+            theCoins -= aDomGame.getBridge_TrollsInPlay();
+            if (aDomGame.getActivePlayer() != null)
+                theCoins -= aDomGame.getActivePlayer().getMinus$2TokenOn() == isFromPile() ? 2 : 0;
         }
         return theCoins<0 ? 0 : theCoins;
     }
@@ -1608,117 +1609,118 @@ public enum DomCardName  {
      * @return
      */
     public final DomCost getCost( DomGame aDomGame ) {
-      DomCost theCost = new DomCost(getCoinCost(aDomGame), getPotionCost());
-      theCost.setDebt(cost.getDebt());
-      return theCost;
+        DomCost theCost = new DomCost(getCoinCost(aDomGame), getPotionCost());
+        theCost.setDebt(cost.getDebt());
+        return theCost;
     }
 
     /**
      * @return
      */
     public final int getPotionCost() {
-      return getCost().getPotions();
+        return getCost().getPotions();
     }
 
-	public String getImageLocation() {
-      StringBuilder theLocation = new StringBuilder();
-      theLocation.append("images/");
-      theLocation.append(super.toString()).append(".jpg");
-      return theLocation.toString().toLowerCase().replaceAll( "_", "" ).replaceAll( "\\$", "" );
-	}
+    public String getImageLocation() {
+        StringBuilder theLocation = new StringBuilder();
+        theLocation.append("images/");
+        theLocation.append(super.toString()).append(".jpg");
+        return theLocation.toString().toLowerCase().replaceAll("_", "").replaceAll("\\$", "");
+    }
 
-	public int getTrashPriority(DomPlayer player) {
-		//trash priorities depend on the owner of the card which is unknown in this enum
-		//so we quickly make a DomCard object and assign it to the player
-		//this way we get a correct trash priority for that player
-		DomCard theIntermediateCard = createNewCardInstance();
-		theIntermediateCard.owner=player.getPossessor()==null ? player : player.getPossessor();
-		return theIntermediateCard.getTrashPriority();
-	}
+    public int getTrashPriority(DomPlayer player) {
+        //trash priorities depend on the owner of the card which is unknown in this enum
+        //so we quickly make a DomCard object and assign it to the player
+        //this way we get a correct trash priority for that player
+        DomCard theIntermediateCard = createNewCardInstance();
+        theIntermediateCard.owner = player.getPossessor() == null ? player : player.getPossessor();
+        return theIntermediateCard.getTrashPriority();
+    }
 
-	public static DomCardName[] getPossibleBaneCards() {
-	    ArrayList<DomCardName> possibleBanes = new ArrayList<DomCardName>();
-		for (DomCardName cardName : values()) {
-			if (cardName.getCost().compareTo(new DomCost(2, 0))==0
-			 || cardName.getCost().compareTo(new DomCost(3, 0))==0){
-				if (cardName.hasCardType(DomCardType.Kingdom))
-			  	  possibleBanes.add(cardName);
-			}
-		}
+    public static DomCardName[] getPossibleBaneCards() {
+        ArrayList<DomCardName> possibleBanes = new ArrayList<DomCardName>();
+        for (DomCardName cardName : values()) {
+            if (cardName.getCost().compareTo(new DomCost(2, 0)) == 0
+                    || cardName.getCost().compareTo(new DomCost(3, 0)) == 0) {
+                if (cardName.hasCardType(DomCardType.Kingdom))
+                    possibleBanes.add(cardName);
+            }
+        }
         return possibleBanes.toArray(new DomCardName[possibleBanes.size()]);
-	}
+    }
 
-	public String toHTML() {
-      String theString = toString();
-      if (DomEngine.showColoredLog) {
-          if (hasCardType(DomCardType.Curse))
-              return "<FONT style=\"BACKGROUND-COLOR: #CC8BC7\">" + theString + "</FONT>";
-          if (hasCardType(DomCardType.Treasure) && hasCardType(DomCardType.Victory))
-              return "<FONT style=\"BACKGROUND-COLOR: #A9E96E\">" + theString + "</FONT>";
-          if (hasCardType(DomCardType.Action) && hasCardType(DomCardType.Victory))
-              return "<FONT style=\"BACKGROUND-COLOR: #6EE9C2\">" + theString + "</FONT>";
-          if (hasCardType(DomCardType.Reaction) && hasCardType(DomCardType.Treasure))
-              return "<FONT style=\"BACKGROUND-COLOR: #CCFF99\">" + theString + "</FONT>";
-          if (hasCardType(DomCardType.Reaction))
-              return "<FONT style=\"BACKGROUND-COLOR: #91A4FC\">" + theString + "</FONT>";
-          if (hasCardType(DomCardType.Treasure))
-              return "<FONT style=\"BACKGROUND-COLOR: #F3F584\">" + theString + "</FONT>";
-          if (hasCardType(DomCardType.Victory))
-              return "<FONT style=\"BACKGROUND-COLOR: #8EBF75\">" + theString + "</FONT>";
-          if (hasCardType(DomCardType.Duration))
-              return "<FONT style=\"BACKGROUND-COLOR: #F88017\">" + theString + "</FONT>";
-          if (hasCardType(DomCardType.Action))
-              return "<FONT style=\"BACKGROUND-COLOR: #D9D9D9 \">" + theString + "</FONT>";
-          if (hasCardType(DomCardType.Event))
-              return "<FONT style=\"BACKGROUND-COLOR: #996633 \">" + theString + "</FONT>";
-          if (hasCardType(DomCardType.Landmark))
-              return "<FONT style=\"BACKGROUND-COLOR: #339966 \">" + theString + "</FONT>";
-      }
-      return theString;
-	}
+    public String toHTML() {
+        String theString = toString();
+        if (DomEngine.showColoredLog) {
+            if (hasCardType(DomCardType.Curse))
+                return "<FONT style=\"BACKGROUND-COLOR: #CC8BC7\">" + theString + "</FONT>";
+            if (hasCardType(DomCardType.Treasure) && hasCardType(DomCardType.Victory))
+                return "<FONT style=\"BACKGROUND-COLOR: #A9E96E\">" + theString + "</FONT>";
+            if (hasCardType(DomCardType.Action) && hasCardType(DomCardType.Victory))
+                return "<FONT style=\"BACKGROUND-COLOR: #6EE9C2\">" + theString + "</FONT>";
+            if (hasCardType(DomCardType.Reaction) && hasCardType(DomCardType.Treasure))
+                return "<FONT style=\"BACKGROUND-COLOR: #CCFF99\">" + theString + "</FONT>";
+            if (hasCardType(DomCardType.Reaction))
+                return "<FONT style=\"BACKGROUND-COLOR: #91A4FC\">" + theString + "</FONT>";
+            if (hasCardType(DomCardType.Treasure))
+                return "<FONT style=\"BACKGROUND-COLOR: #F3F584\">" + theString + "</FONT>";
+            if (hasCardType(DomCardType.Victory))
+                return "<FONT style=\"BACKGROUND-COLOR: #8EBF75\">" + theString + "</FONT>";
+            if (hasCardType(DomCardType.Duration))
+                return "<FONT style=\"BACKGROUND-COLOR: #F88017\">" + theString + "</FONT>";
+            if (hasCardType(DomCardType.Action))
+                return "<FONT style=\"BACKGROUND-COLOR: #D9D9D9 \">" + theString + "</FONT>";
+            if (hasCardType(DomCardType.Event))
+                return "<FONT style=\"BACKGROUND-COLOR: #996633 \">" + theString + "</FONT>";
+            if (hasCardType(DomCardType.Landmark))
+                return "<FONT style=\"BACKGROUND-COLOR: #339966 \">" + theString + "</FONT>";
+        }
+        return theString;
+    }
 
-	public DomSet getSet() {
-		for (DomSet set : DomSet.values()){
-			if (set.contains(this))
-				return set;
-		}
-		return null;
-	}
+    public DomSet getSet() {
+        for (DomSet set : DomSet.values()) {
+            if (set.contains(this))
+                return set;
+        }
+        return null;
+    }
 
-	public URL getImageURL() {
-//		return null;
-		//TODO this should be called in some other way
-		return new EscapeDialog().getClass().getResource(getImageLocation());
-	}
-	public String getCompleteImageLocation() {
-//		return null;
-		//TODO this should be called in some other way
-//		return new EscapeDialog().getClass().getResource(getImageLocation());
-		return  "C:/Documents and Settings/djag492/My Documents/Jeroen/Dominion/" + getImageLocation();
-//		return  "C:/Users/MEDION/Pictures/" + getImageLocation();
-	}
+    public URL getImageURL() {
+        //		return null;
+        //TODO this should be called in some other way
+        return new EscapeDialog().getClass().getResource(getImageLocation());
+    }
 
-	public static DomCardName[] getKingdomCards() {
-		ArrayList<DomCardName> theCards = new ArrayList<DomCardName>();
-		for (DomCardName cardName : values()){
-			if (!DomSet.Base.contains(cardName))
-				theCards.add(cardName);
-		}
+    public String getCompleteImageLocation() {
+        //		return null;
+        //TODO this should be called in some other way
+        //		return new EscapeDialog().getClass().getResource(getImageLocation());
+        return "C:/Documents and Settings/djag492/My Documents/Jeroen/Dominion/" + getImageLocation();
+        //		return  "C:/Users/MEDION/Pictures/" + getImageLocation();
+    }
+
+    public static DomCardName[] getKingdomCards() {
+        ArrayList<DomCardName> theCards = new ArrayList<DomCardName>();
+        for (DomCardName cardName : values()) {
+            if (!DomSet.Base.contains(cardName))
+                theCards.add(cardName);
+        }
         return theCards.toArray(new DomCardName[theCards.size()]);
-	}
+    }
 
-	public int getOrderInBuyRules(DomPlayer owner) {
-		int i=0;
-		if (owner==null)
-			return 1000;
-		for (DomBuyRule rule : owner.getBuyRules()){
-		  if (rule.getCardToBuy()==this && owner.wantsToGainOrKeep(this)){
-		     return i;
-		  }
-		  i++;
-		}
-		return 1000;
-	}
+    public int getOrderInBuyRules(DomPlayer owner) {
+        int i = 0;
+        if (owner == null)
+            return 1000;
+        for (DomBuyRule rule : owner.getBuyRules()) {
+            if (rule.getCardToBuy() == this && owner.wantsToGainOrKeep(this)) {
+                return i;
+            }
+            i++;
+        }
+        return 1000;
+    }
 
     public int getDebtCost() {
         return getCost().getDebt();
@@ -1727,26 +1729,27 @@ public enum DomCardName  {
     public DomCardName isFromPile() {
         if (hasCardType(DomCardType.Split_Pile) ) {
             switch (this) {
-                case Settlers:
-                case Bustling_Village:
-                    return DomCardName.Settlers;
-                case Catapult:
-                case Rocks:
-                    return DomCardName.Catapult;
-                case Patrician:
-                case Emporium:
-                    return DomCardName.Patrician;
-                case Encampment:
-                case Plunder:
-                    return DomCardName.Encampment;
-                case Gladiator:
-                case Fortune:
-                    return DomCardName.Gladiator;
-                case Sauna:
-                case Avanto:
-                    return DomCardName.Sauna;
-                default:
-                	System.err.println("Attempted to determine the pile of the split pile card \"" + toString() + "\" that isn't on the recognized list of split pile cards!");
+            case Settlers:
+            case Bustling_Village:
+                return DomCardName.Settlers;
+            case Catapult:
+            case Rocks:
+                return DomCardName.Catapult;
+            case Patrician:
+            case Emporium:
+                return DomCardName.Patrician;
+            case Encampment:
+            case Plunder:
+                return DomCardName.Encampment;
+            case Gladiator:
+            case Fortune:
+                return DomCardName.Gladiator;
+            case Sauna:
+            case Avanto:
+                return DomCardName.Sauna;
+            default:
+                System.err.println("Attempted to determine the pile of the split pile card \"" + toString()
+                        + "\" that isn't on the recognized list of split pile cards!");
             }
         }
 
@@ -1774,7 +1777,8 @@ public enum DomCardName  {
 
     public String getImageLink() {
         if (this==Poacher || this==Sentry || this==Vassal || this==Merchant || this==Harbinger || this==Bandit || this==Artisan)
-          return "http://dominion.diehrstraits.com/scans/2nd/"+toString().replaceAll(" |-|'","").toLowerCase()+".jpg";
+            return "http://dominion.diehrstraits.com/scans/2nd/" + toString().replaceAll(" |-|'", "").toLowerCase()
+                    + ".jpg";
         return "http://dominion.diehrstraits.com/scans/"+getSet().toString().toLowerCase()+"/"+toString().replaceAll(" |-|'","").toLowerCase()+".jpg";
     }
 

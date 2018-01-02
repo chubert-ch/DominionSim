@@ -1,25 +1,25 @@
 package be.aga.dominionSimulator.gui;
 
+import javax.swing.table.DefaultTableModel;
+
 import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 
-import javax.swing.table.DefaultTableModel;
-
 public class KingdomTableModel extends DefaultTableModel {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -8672408093782296492L;
-	private DomEngine anEngine;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -8672408093782296492L;
+    private DomEngine anEngine;
     public KingdomTableModel(DomEngine anEngine) {
         super(25,2);
         this.anEngine = anEngine;
         update();
     }
 
-	public void update() {
+    public void update() {
         int kingdomRowCount = 0;
         int nonKingdomRowCount=0;
         for (DomCardName theCard:anEngine.getCurrentGame().getBoard().keySet()) {

@@ -14,7 +14,17 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.NumberFormatter;
 
@@ -25,34 +35,34 @@ import be.aga.dominionSimulator.StartState;
 import be.aga.dominionSimulator.enums.DomBotType;
 
 public class DomBotEditor extends EscapeDialog implements ActionListener {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1818817906737351312L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1818817906737351312L;
 
-  private static final int TEXT_FIELD_WIDTH = 50;
+    private static final int TEXT_FIELD_WIDTH = 50;
 
-//made static for ease of use
-  public static JLabel cardImageLabel;
+    //made static for ease of use
+    public static JLabel cardImageLabel;
 
-  private JPanel myControlPanel;
-  private final DomEngine myEngine;
-  private final DomPlayer myChosenStrategy;
-  private JPanel myPlayerPanel;
-  private ArrayList<DomBuyRulePanel> myBuyRulePanels=new ArrayList<DomBuyRulePanel>();
-  private JTextField myNameField;
-	private JList<DomBotType> myBotTypeList;
-  private JTextArea myDescriptionField;
-  private JTextField myAuthorField;
-  private JButton myTypeButton;
-  private HashSet<DomBotType> myTypes;
-  private JCheckBox myShuffleDeckBox;
-  private JTextField myStartingHandField;
-  private JTextField myBoardField;
-  private JTextField myStartingDrawDeckField;
-  private JTextField myBaneField;
-  private JTextField myStartingDiscardPile;
-  private JFormattedTextField myMountainPassBidField;
+    private JPanel myControlPanel;
+    private final DomEngine myEngine;
+    private final DomPlayer myChosenStrategy;
+    private JPanel myPlayerPanel;
+    private ArrayList<DomBuyRulePanel> myBuyRulePanels = new ArrayList<DomBuyRulePanel>();
+    private JTextField myNameField;
+    private JList<DomBotType> myBotTypeList;
+    private JTextArea myDescriptionField;
+    private JTextField myAuthorField;
+    private JButton myTypeButton;
+    private HashSet<DomBotType> myTypes;
+    private JCheckBox myShuffleDeckBox;
+    private JTextField myStartingHandField;
+    private JTextField myBoardField;
+    private JTextField myStartingDrawDeckField;
+    private JTextField myBaneField;
+    private JTextField myStartingDiscardPile;
+    private JFormattedTextField myMountainPassBidField;
     private JTextField myObeliskChoice;
     private JCheckBox myShelters;
 
@@ -65,129 +75,130 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
         pack();
         setVisible( true );
         addWindowListener(new WindowAdapter() {
-          public void windowClosing(WindowEvent e) {
-            dispose();
-          }
+            public void windowClosing(WindowEvent e) {
+                dispose();
+            }
         });
     }
 
     protected void savePlayer() {
-    	DomPlayer theNewPlayer = new DomPlayer(myNameField.getText());
-    	theNewPlayer.setAuthor(myAuthorField.getText());
-    	theNewPlayer.setDescription(myDescriptionField.getText().replaceAll("\\r\\n|\\r|\\n", "XXXX"));
-    	StartState theStartState = getStartState();
-    	if (theStartState==null) {
+        DomPlayer theNewPlayer = new DomPlayer(myNameField.getText());
+        theNewPlayer.setAuthor(myAuthorField.getText());
+        theNewPlayer.setDescription(myDescriptionField.getText().replaceAll("\\r\\n|\\r|\\n", "XXXX"));
+        StartState theStartState = getStartState();
+        if (theStartState == null) {
             JOptionPane.showMessageDialog(this, "An error was found in the Start State", "Error", JOptionPane.ERROR_MESSAGE);
             return;
-    	}
-    	if (theStartState.myOriginalDiscard.isEmpty()
-    	&& theStartState.myOriginalDrawDeck.isEmpty()
-    	&& theStartState.myOriginalHand.isEmpty()) {
-    	  theNewPlayer.setStartState(null);
-    	} else {
-    	  theNewPlayer.setStartState(theStartState);
-    	}
-    	if (!theNewPlayer.addBoard(myBoardField.getText(), myBaneField.getText(),myMountainPassBidField.getText(),myObeliskChoice.getText(), Boolean.toString(myShelters.isSelected()))){
+        }
+        if (theStartState.myOriginalDiscard.isEmpty() && theStartState.myOriginalDrawDeck.isEmpty()
+                && theStartState.myOriginalHand.isEmpty()) {
+            theNewPlayer.setStartState(null);
+        } else {
+            theNewPlayer.setStartState(theStartState);
+        }
+        if (!theNewPlayer.addBoard(myBoardField.getText(), myBaneField.getText(), myMountainPassBidField.getText(),
+                myObeliskChoice.getText(), Boolean.toString(myShelters.isSelected()))) {
             JOptionPane.showMessageDialog(this, "An error was found in the Board", "Error", JOptionPane.ERROR_MESSAGE);
             return;
-    	}
+        }
         for (DomBuyRulePanel theRulePanel : myBuyRulePanels) {
-    	  theNewPlayer.addBuyRule(theRulePanel.getBuyRule(theNewPlayer));
-    	}
-    	theNewPlayer.setShelters(myShelters.isSelected());
-    	theNewPlayer.setTypes(myTypes);
-    	theNewPlayer.addType(DomBotType.UserCreated);
-    	if (!theNewPlayer.hasType(DomBotType.ThreePlayer) && ! theNewPlayer.hasType(DomBotType.FourPlayer))
-    		theNewPlayer.addType(DomBotType.TwoPlayer);
-    	if (!theNewPlayer.hasType(DomBotType.Colony))
-    		theNewPlayer.addType(DomBotType.Province);
-    	myEngine.addUserBot(theNewPlayer);
+            theNewPlayer.addBuyRule(theRulePanel.getBuyRule(theNewPlayer));
+        }
+        theNewPlayer.setShelters(myShelters.isSelected());
+        theNewPlayer.setTypes(myTypes);
+        theNewPlayer.addType(DomBotType.UserCreated);
+        if (!theNewPlayer.hasType(DomBotType.ThreePlayer) && !theNewPlayer.hasType(DomBotType.FourPlayer))
+            theNewPlayer.addType(DomBotType.TwoPlayer);
+        if (!theNewPlayer.hasType(DomBotType.Colony))
+            theNewPlayer.addType(DomBotType.Province);
+        myEngine.addUserBot(theNewPlayer);
         dispose();
     }
 
-	private StartState getStartState() {
-		StartState theStartState = new StartState();
-		if (!theStartState.addDiscard(myStartingDiscardPile.getText())
-		 || !theStartState.addDrawDeck(myStartingDrawDeckField.getText(), myShuffleDeckBox.isSelected()?"true":"false")
-		 || !theStartState.addHand(myStartingHandField.getText()))
-			return null;
-		return theStartState;
-	}
+    private StartState getStartState() {
+        StartState theStartState = new StartState();
+        if (!theStartState.addDiscard(myStartingDiscardPile.getText())
+                || !theStartState.addDrawDeck(myStartingDrawDeckField.getText(),
+                        myShuffleDeckBox.isSelected() ? "true" : "false")
+                || !theStartState.addHand(myStartingHandField.getText()))
+            return null;
+        return theStartState;
+    }
 
-	private void buildGui()	{
-    getContentPane().add(getControlPanel(), BorderLayout.PAGE_START);
-    getContentPane().add(getPlayerPanel(), BorderLayout.CENTER);
-	}
+    private void buildGui() {
+        getContentPane().add(getControlPanel(), BorderLayout.PAGE_START);
+        getContentPane().add(getPlayerPanel(), BorderLayout.CENTER);
+    }
 
-	private void fillPlayerPanel() {
-	  myPlayerPanel.removeAll();
-      final GridBagConstraints theCons = DomGui.getGridBagConstraints( 2 );
-      JLabel theLabel = new JLabel("Important!! These will be evaluated from top to bottom for each buy!!");
-      theLabel.setForeground(Color.red);
-      myPlayerPanel.add(theLabel,theCons);
-      JButton theBTN = new JButton("Toggle View of Buy Conditions");
-      theBTN.setMnemonic('T');
-      theBTN.addActionListener(this);
-      theBTN.setActionCommand("toggle conditions");
-      theCons.gridy++;
-      theCons.fill=GridBagConstraints.NONE;
-      theCons.anchor=GridBagConstraints.CENTER;
-      myPlayerPanel.add(theBTN,theCons);
-      theCons.anchor=GridBagConstraints.NORTHWEST;
-      theCons.fill=GridBagConstraints.BOTH;
+    private void fillPlayerPanel() {
+        myPlayerPanel.removeAll();
+        final GridBagConstraints theCons = DomGui.getGridBagConstraints(2);
+        JLabel theLabel = new JLabel("Important!! These will be evaluated from top to bottom for each buy!!");
+        theLabel.setForeground(Color.red);
+        myPlayerPanel.add(theLabel, theCons);
+        JButton theBTN = new JButton("Toggle View of Buy Conditions");
+        theBTN.setMnemonic('T');
+        theBTN.addActionListener(this);
+        theBTN.setActionCommand("toggle conditions");
+        theCons.gridy++;
+        theCons.fill = GridBagConstraints.NONE;
+        theCons.anchor = GridBagConstraints.CENTER;
+        myPlayerPanel.add(theBTN, theCons);
+        theCons.anchor = GridBagConstraints.NORTHWEST;
+        theCons.fill = GridBagConstraints.BOTH;
 
-      int i=0;
-      theBTN = new JButton("Add a Buy Rule");
-      theBTN.setMnemonic('A');
-      theBTN.addActionListener(this);
-      theBTN.setActionCommand("add rule " + i);
-      theCons.gridy++;
-      theCons.fill=GridBagConstraints.NONE;
-      myPlayerPanel.add(theBTN,theCons);
-      theCons.fill=GridBagConstraints.BOTH;
+        int i = 0;
+        theBTN = new JButton("Add a Buy Rule");
+        theBTN.setMnemonic('A');
+        theBTN.addActionListener(this);
+        theBTN.setActionCommand("add rule " + i);
+        theCons.gridy++;
+        theCons.fill = GridBagConstraints.NONE;
+        myPlayerPanel.add(theBTN, theCons);
+        theCons.fill = GridBagConstraints.BOTH;
 
-      for (DomBuyRulePanel thePanel : myBuyRulePanels){
-    	i++;
-    	theCons.gridy++;
-	    myPlayerPanel.add(thePanel, theCons);
-      }
+        for (DomBuyRulePanel thePanel : myBuyRulePanels) {
+            i++;
+            theCons.gridy++;
+            myPlayerPanel.add(thePanel, theCons);
+        }
 
-      theBTN = new JButton("Add a Buy Rule");
-      theBTN.setMnemonic('B');
-      theBTN.addActionListener(this);
-      theBTN.setActionCommand("add rule "+i);
-      theCons.gridy++;
-      theCons.fill=GridBagConstraints.NONE;
-      myPlayerPanel.add(theBTN,theCons);
-      theCons.fill=GridBagConstraints.BOTH;
+        theBTN = new JButton("Add a Buy Rule");
+        theBTN.setMnemonic('B');
+        theBTN.addActionListener(this);
+        theBTN.setActionCommand("add rule " + i);
+        theCons.gridy++;
+        theCons.fill = GridBagConstraints.NONE;
+        myPlayerPanel.add(theBTN, theCons);
+        theCons.fill = GridBagConstraints.BOTH;
 
-      theCons.gridy++;
-      DomGui.addHeavyLabel(myPlayerPanel, theCons);
+        theCons.gridy++;
+        DomGui.addHeavyLabel(myPlayerPanel, theCons);
 
-      validate();
-	}
+        validate();
+    }
 
     private JScrollPane getPlayerPanel() {
-  	  myPlayerPanel = new JPanel();
-      myPlayerPanel.setLayout( new GridBagLayout() );
-  	  myPlayerPanel.setBorder( new TitledBorder( "Buy Rules" ));
-      JScrollPane scr = new JScrollPane( myPlayerPanel );
-	  if (Toolkit.getDefaultToolkit().getScreenSize().height>800)
-        scr.setPreferredSize( new Dimension( 750, 600 ) );
-	  else
-        scr.setPreferredSize( new Dimension( 750, 450 ) );
-      scr.getVerticalScrollBar().setUnitIncrement(24);
+        myPlayerPanel = new JPanel();
+        myPlayerPanel.setLayout(new GridBagLayout());
+        myPlayerPanel.setBorder(new TitledBorder("Buy Rules"));
+        JScrollPane scr = new JScrollPane(myPlayerPanel);
+        if (Toolkit.getDefaultToolkit().getScreenSize().height > 800)
+            scr.setPreferredSize(new Dimension(750, 600));
+        else
+            scr.setPreferredSize(new Dimension(750, 450));
+        scr.getVerticalScrollBar().setUnitIncrement(24);
 
-      for (final DomBuyRule theRule : myChosenStrategy.getPrizeBuyRules()){
-        DomBuyRulePanel theRulePanel = theRule.getGuiPanel(this);
-        myBuyRulePanels.add(theRulePanel);
-      }
-      for (final DomBuyRule theRule : myChosenStrategy.getBuyRules()){
-        DomBuyRulePanel theRulePanel = theRule.getGuiPanel(this);
-        myBuyRulePanels.add(theRulePanel);
-      }
-      fillPlayerPanel();
-      return scr;
+        for (final DomBuyRule theRule : myChosenStrategy.getPrizeBuyRules()) {
+            DomBuyRulePanel theRulePanel = theRule.getGuiPanel(this);
+            myBuyRulePanels.add(theRulePanel);
+        }
+        for (final DomBuyRule theRule : myChosenStrategy.getBuyRules()) {
+            DomBuyRulePanel theRulePanel = theRule.getGuiPanel(this);
+            myBuyRulePanels.add(theRulePanel);
+        }
+        fillPlayerPanel();
+        return scr;
     }
 
     private JPanel getControlPanel() {
@@ -233,18 +244,18 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
         return myControlPanel;
     }
 
-	private JTabbedPane getTabbedPane() {
-		JTabbedPane theTabbedPane = new JTabbedPane();
-		theTabbedPane.add("Description", getDescriptionField());
-		theTabbedPane.add("Start State", getStartStatePanel());
-		theTabbedPane.add("Board", getBoardPanel());
-		return theTabbedPane;
-	}
+    private JTabbedPane getTabbedPane() {
+        JTabbedPane theTabbedPane = new JTabbedPane();
+        theTabbedPane.add("Description", getDescriptionField());
+        theTabbedPane.add("Start State", getStartStatePanel());
+        theTabbedPane.add("Board", getBoardPanel());
+        return theTabbedPane;
+    }
 
-	private JPanel getStartStatePanel() {
+    private JPanel getStartStatePanel() {
         final JPanel thePanel = new JPanel();
         thePanel.setLayout( new GridBagLayout() );
-//        thePanel.setBorder( new TitledBorder( "" ));
+        //        thePanel.setBorder( new TitledBorder( "" ));
         final GridBagConstraints theCons = DomGui.getGridBagConstraints( 2 );
         //starting hand
         thePanel.add(new JLabel("Starting Hand"),theCons);
@@ -266,7 +277,7 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
         theCons.gridx++;
         thePanel.add(myStartingDrawDeckField,theCons);
         myShuffleDeckBox = new JCheckBox("Shuffle draw deck", null, true);
-//        theCons.gridx++;
+        //        theCons.gridx++;
         theCons.gridx=0;
         theCons.gridy++;
         thePanel.add(myShuffleDeckBox,theCons);
@@ -282,20 +293,20 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
 
         StartState theStartState = myChosenStrategy.getStartState();
         if (theStartState!=null) {
-        	myStartingDiscardPile.setText(theStartState.myOriginalDiscard);
-        	myStartingDrawDeckField.setText(theStartState.myOriginalDrawDeck);
-        	myStartingHandField.setText(theStartState.myOriginalHand);
-        	myShuffleDeckBox.setSelected(theStartState.isShuffleDrawDeck());
+            myStartingDiscardPile.setText(theStartState.myOriginalDiscard);
+            myStartingDrawDeckField.setText(theStartState.myOriginalDrawDeck);
+            myStartingHandField.setText(theStartState.myOriginalHand);
+            myShuffleDeckBox.setSelected(theStartState.isShuffleDrawDeck());
         }
 
 
         return thePanel;
-	}
+    }
 
-	private JPanel getBoardPanel() {
+    private JPanel getBoardPanel() {
         final JPanel thePanel = new JPanel();
         thePanel.setLayout( new GridBagLayout() );
-//        thePanel.setBorder( new TitledBorder( "" ));
+        //        thePanel.setBorder( new TitledBorder( "" ));
         final GridBagConstraints theCons = DomGui.getGridBagConstraints( 2 );
         //board cards
         thePanel.add(new JLabel("Board"),theCons);
@@ -320,7 +331,7 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
         formatter.setValueClass(Integer.class);
         formatter.setMinimum(0);
         formatter.setMaximum(Integer.MAX_VALUE);
-//        formatter.setAllowsInvalid(false);
+        //        formatter.setAllowsInvalid(false);
         formatter.setCommitsOnValidEdit(false);
         myMountainPassBidField = new JFormattedTextField(formatter);
         myMountainPassBidField.setColumns(10);
@@ -351,152 +362,151 @@ public class DomBotEditor extends EscapeDialog implements ActionListener {
         theCons.anchor=GridBagConstraints.EAST;
         thePanel.add(theInfoBTN,theCons);
         return thePanel;
-	}
+    }
 
-	private JButton getTypesButton() {
+    private JButton getTypesButton() {
         myTypeButton = new JButton("Type(s): "+getTypes());
         myTypeButton.setMnemonic('y');
         myTypeButton.addActionListener(this);
         myTypeButton.setActionCommand("Types");
         return myTypeButton;
-	}
+    }
 
-	private String getTypes() {
-		StringBuilder theTypeString=null;
-		if (myBotTypeList!=null){
-			myTypes=new HashSet<DomBotType>();
-			for (Object botType : myBotTypeList.getSelectedValuesList()){
-				myTypes.add((DomBotType) botType);
-			}
-		}
-		if (myTypes==null) {
-			myTypes = new HashSet<DomBotType>();
-			for (DomBotType botType : myChosenStrategy.getTypes()){
-				myTypes.add(botType);
-			}
-		}
-        for (DomBotType botType : myTypes){
-        	if (theTypeString==null){
-        		theTypeString = new StringBuilder("");
-        	} else {
-        		theTypeString.append(", ");
-        	}
-        	theTypeString.append(botType);
+    private String getTypes() {
+        StringBuilder theTypeString = null;
+        if (myBotTypeList != null) {
+            myTypes = new HashSet<DomBotType>();
+            for (Object botType : myBotTypeList.getSelectedValuesList()) {
+                myTypes.add((DomBotType) botType);
+            }
         }
-		return theTypeString==null? "" : theTypeString.toString();
-	}
+        if (myTypes == null) {
+            myTypes = new HashSet<DomBotType>();
+            for (DomBotType botType : myChosenStrategy.getTypes()) {
+                myTypes.add(botType);
+            }
+        }
+        for (DomBotType botType : myTypes){
+            if (theTypeString == null) {
+                theTypeString = new StringBuilder("");
+            } else {
+                theTypeString.append(", ");
+            }
+            theTypeString.append(botType);
+        }
+        return theTypeString == null ? "" : theTypeString.toString();
+    }
 
-	private JList<DomBotType> getTypeList() {
-		myBotTypeList = new JList<DomBotType>(DomBotType.values());
-      myBotTypeList.setSelectionModel(new ToggleListSelectionModel());
-    	ArrayList<DomBotType> thePossibleTypes = new ArrayList<DomBotType>();
-    	for (DomBotType botType : DomBotType.values()){
-    		thePossibleTypes.add(botType);
-    	}
-    	myBotTypeList.setBorder(new TitledBorder("Choose type(s) of this strategy"));
+    private JList<DomBotType> getTypeList() {
+        myBotTypeList = new JList<DomBotType>(DomBotType.values());
+        myBotTypeList.setSelectionModel(new ToggleListSelectionModel());
+        ArrayList<DomBotType> thePossibleTypes = new ArrayList<DomBotType>();
+        for (DomBotType botType : DomBotType.values()) {
+            thePossibleTypes.add(botType);
+        }
+        myBotTypeList.setBorder(new TitledBorder("Choose type(s) of this strategy"));
 
-      HashSet<DomBotType> selectedTypes = (myTypes == null ? myChosenStrategy.getTypes() : myTypes);
-      int[] theSelectedIndices = new int[selectedTypes.size()];
-    	int i=0;
+        HashSet<DomBotType> selectedTypes = (myTypes == null ? myChosenStrategy.getTypes() : myTypes);
+        int[] theSelectedIndices = new int[selectedTypes.size()];
+        int i = 0;
 
-    	for (DomBotType type : selectedTypes){
-    		theSelectedIndices[i++] = thePossibleTypes.indexOf(type);
-    	}
-    	myBotTypeList.setSelectedIndices(theSelectedIndices);
-      myBotTypeList.setBorder(new TitledBorder("Click to select types"));
-    	myBotTypeList.requestFocus();
-    	return myBotTypeList;
-	}
+        for (DomBotType type : selectedTypes) {
+            theSelectedIndices[i++] = thePossibleTypes.indexOf(type);
+        }
+        myBotTypeList.setSelectedIndices(theSelectedIndices);
+        myBotTypeList.setBorder(new TitledBorder("Click to select types"));
+        myBotTypeList.requestFocus();
+        return myBotTypeList;
+    }
 
-	private JScrollPane getDescriptionField() {
-		myDescriptionField = new JTextArea(myChosenStrategy.getDescription().replaceAll("XXXX", System.getProperty( "line.separator" )) ,5,30);
-		JScrollPane thePane = new JScrollPane(myDescriptionField);
-		return thePane;
-	}
+    private JScrollPane getDescriptionField() {
+        myDescriptionField = new JTextArea(
+                myChosenStrategy.getDescription().replaceAll("XXXX", System.getProperty("line.separator")), 5, 30);
+        JScrollPane thePane = new JScrollPane(myDescriptionField);
+        return thePane;
+    }
 
     @Override
-	public void actionPerformed(ActionEvent aE) {
-      if (aE.getActionCommand().equals( "StartStateInfo" )) {
-    	  String theText= "<html><u>This tab allows defining a forced starting state (instead of starting with 7 Coppers and 3 Estates)</u>"
-        		+"<br>Use the correct spelling for cards and capitals where needed (and no ending 's' for multiples)!"
-        		+"<br>This is correct: <i>2 Mountebank, 2 Copper, Village</i>"
-        		+"<br><br>The draw deck can either be shuffled or put into a fixed order."
-        		+"<br><br>If starting hand is empty, 5 cards will be drawn."
-        		+"</html>";
-          JOptionPane.showMessageDialog(this, theText, "Info", JOptionPane.INFORMATION_MESSAGE);
-      }
+    public void actionPerformed(ActionEvent aE) {
+        if (aE.getActionCommand().equals("StartStateInfo")) {
+            String theText = "<html><u>This tab allows defining a forced starting state (instead of starting with 7 Coppers and 3 Estates)</u>"
+                    + "<br>Use the correct spelling for cards and capitals where needed (and no ending 's' for multiples)!"
+                    + "<br>This is correct: <i>2 Mountebank, 2 Copper, Village</i>"
+                    + "<br><br>The draw deck can either be shuffled or put into a fixed order."
+                    + "<br><br>If starting hand is empty, 5 cards will be drawn." + "</html>";
+            JOptionPane.showMessageDialog(this, theText, "Info", JOptionPane.INFORMATION_MESSAGE);
+        }
 
-      if (aE.getActionCommand().equals( "BoardInfo" )) {
-    	  String theText= "<html><u>This tab allows defining a board</u>"
-        		+"<br><br>Use the correct spelling for cards and capitals where needed!"
-        		+"<br>This is correct: <i>Chapel, Throne Room, Pawn, Courtyard, Vault, Caravan, Cellar, Moat, Witch and Worker's Village</i>"
-        		+"<br><br>The Bane card for Young Witch, if present, must be defined separately" +
-        				"</html>";
-          JOptionPane.showMessageDialog(this, theText, "Info", JOptionPane.INFORMATION_MESSAGE);
-      }
+        if (aE.getActionCommand().equals("BoardInfo")) {
+            String theText = "<html><u>This tab allows defining a board</u>"
+                    + "<br><br>Use the correct spelling for cards and capitals where needed!"
+                    + "<br>This is correct: <i>Chapel, Throne Room, Pawn, Courtyard, Vault, Caravan, Cellar, Moat, Witch and Worker's Village</i>"
+                    + "<br><br>The Bane card for Young Witch, if present, must be defined separately" + "</html>";
+            JOptionPane.showMessageDialog(this, theText, "Info", JOptionPane.INFORMATION_MESSAGE);
+        }
 
-      if (aE.getActionCommand().equals( "Move Up" )) {
-    	 JButton theButton = (JButton) aE.getSource();
-    	 DomBuyRulePanel thePanel = (DomBuyRulePanel) theButton.getClientProperty("my rule box");
-		 int theIndex = myBuyRulePanels.indexOf(thePanel);
-		 if (theIndex>0) {
-			 myBuyRulePanels.remove(theIndex);
-			 myBuyRulePanels.add(theIndex-1, thePanel);
-			 fillPlayerPanel();
-			 return;
-		 }
-      }
-      if (aE.getActionCommand().equals( "Move Down" )) {
-     	 final JButton theButton = (JButton) aE.getSource();
-     	 DomBuyRulePanel thePanel = (DomBuyRulePanel) theButton.getClientProperty("my rule box");
- 		 int theIndex = myBuyRulePanels.indexOf(thePanel);
-		 if (theIndex<myBuyRulePanels.size()-1) {
-			 myBuyRulePanels.remove(theIndex);
-			 myBuyRulePanels.add(theIndex+1, thePanel);
-			 fillPlayerPanel();
-			 return;
-		 }
-      }
-      if (aE.getActionCommand().equals( "Delete" )) {
-      	 JButton theButton = (JButton) aE.getSource();
-      	 DomBuyRulePanel thePanel = (DomBuyRulePanel) theButton.getClientProperty("my rule box");
-    	 myBuyRulePanels.remove(thePanel);
-	     fillPlayerPanel();
-		 return;
-      }
-      if (aE.getActionCommand().startsWith("add rule" )) {
-    	 DomBuyRule theDummyBuyRule = new DomBuyRule("Copper", null, null);
-    	 int theIndex = new Integer(aE.getActionCommand().substring(9));
-    	 myBuyRulePanels.add(theIndex, theDummyBuyRule.getGuiPanel(this));
- 	     fillPlayerPanel();
- 		 return;
-      }
-      if (aE.getActionCommand().equals( "Duplicate" )) {
-      	 final JButton theButton = (JButton) aE.getSource();
-      	 DomBuyRulePanel thePanel = (DomBuyRulePanel) theButton.getClientProperty("my rule box");
-  		 int theIndex = myBuyRulePanels.indexOf(thePanel);
-    	 myBuyRulePanels.add(theIndex, thePanel.getBuyRule(myChosenStrategy).getGuiPanel(this));
- 	     fillPlayerPanel();
-      }
-      if (aE.getActionCommand().startsWith("toggle" )) {
-    	 for (DomBuyRulePanel thePanel : myBuyRulePanels) {
-    	  thePanel.toggleBuyConditions();
-    	 }
-       }
-      if (aE.getActionCommand().equals("Save" )) {
-        savePlayer();
-      }
-      if (aE.getActionCommand().equals("Cancel" )) {
-        dispose();
-      }
-      if (aE.getActionCommand().equals("Types" )) {
-        JOptionPane.showMessageDialog(this, getTypeList());
-        myTypeButton.setText("Type(s): " + getTypes());
-      }
-	}
+        if (aE.getActionCommand().equals("Move Up")) {
+            JButton theButton = (JButton) aE.getSource();
+            DomBuyRulePanel thePanel = (DomBuyRulePanel) theButton.getClientProperty("my rule box");
+            int theIndex = myBuyRulePanels.indexOf(thePanel);
+            if (theIndex > 0) {
+                myBuyRulePanels.remove(theIndex);
+                myBuyRulePanels.add(theIndex - 1, thePanel);
+                fillPlayerPanel();
+                return;
+            }
+        }
+        if (aE.getActionCommand().equals("Move Down")) {
+            final JButton theButton = (JButton) aE.getSource();
+            DomBuyRulePanel thePanel = (DomBuyRulePanel) theButton.getClientProperty("my rule box");
+            int theIndex = myBuyRulePanels.indexOf(thePanel);
+            if (theIndex < myBuyRulePanels.size() - 1) {
+                myBuyRulePanels.remove(theIndex);
+                myBuyRulePanels.add(theIndex + 1, thePanel);
+                fillPlayerPanel();
+                return;
+            }
+        }
+        if (aE.getActionCommand().equals("Delete")) {
+            JButton theButton = (JButton) aE.getSource();
+            DomBuyRulePanel thePanel = (DomBuyRulePanel) theButton.getClientProperty("my rule box");
+            myBuyRulePanels.remove(thePanel);
+            fillPlayerPanel();
+            return;
+        }
+        if (aE.getActionCommand().startsWith("add rule")) {
+            DomBuyRule theDummyBuyRule = new DomBuyRule("Copper", null, null);
+            int theIndex = new Integer(aE.getActionCommand().substring(9));
+            myBuyRulePanels.add(theIndex, theDummyBuyRule.getGuiPanel(this));
+            fillPlayerPanel();
+            return;
+        }
+        if (aE.getActionCommand().equals("Duplicate")) {
+            final JButton theButton = (JButton) aE.getSource();
+            DomBuyRulePanel thePanel = (DomBuyRulePanel) theButton.getClientProperty("my rule box");
+            int theIndex = myBuyRulePanels.indexOf(thePanel);
+            myBuyRulePanels.add(theIndex, thePanel.getBuyRule(myChosenStrategy).getGuiPanel(this));
+            fillPlayerPanel();
+        }
+        if (aE.getActionCommand().startsWith("toggle")) {
+            for (DomBuyRulePanel thePanel : myBuyRulePanels) {
+                thePanel.toggleBuyConditions();
+            }
+        }
+        if (aE.getActionCommand().equals("Save")) {
+            savePlayer();
+        }
+        if (aE.getActionCommand().equals("Cancel")) {
+            dispose();
+        }
+        if (aE.getActionCommand().equals("Types")) {
+            JOptionPane.showMessageDialog(this, getTypeList());
+            myTypeButton.setText("Type(s): " + getTypes());
+        }
+    }
     @Override
-	public void dispose() {
-      myEngine.getGui().getGlassPane().setVisible(false);
-      super.dispose();
-	}
+    public void dispose() {
+        myEngine.getGui().getGlassPane().setVisible(false);
+        super.dispose();
+    }
 }

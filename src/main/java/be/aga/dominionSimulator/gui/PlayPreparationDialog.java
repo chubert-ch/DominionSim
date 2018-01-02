@@ -1,5 +1,26 @@
 package be.aga.dominionSimulator.gui;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Random;
+
+import javax.swing.AbstractButton;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+
 import be.aga.dominionSimulator.DomBuyRule;
 import be.aga.dominionSimulator.DomEngine;
 import be.aga.dominionSimulator.DomPlayer;
@@ -7,13 +28,6 @@ import be.aga.dominionSimulator.StartState;
 import be.aga.dominionSimulator.enums.DomCardName;
 import be.aga.dominionSimulator.enums.DomCardType;
 import be.aga.dominionSimulator.enums.DomSet;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.*;
 
 /**
  * Created by jeroena on 19/02/2016.
@@ -21,9 +35,9 @@ import java.util.*;
 public class PlayPreparationDialog extends JFrame implements ActionListener {
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = -7755122367867940116L;
+     * 
+     */
+    private static final long serialVersionUID = -7755122367867940116L;
     private final DomEngine myEngine;
     private final ArrayList<DomPlayer> myBots;
     private HashSet<DomCardName> myBoard = new HashSet<DomCardName>();
@@ -66,7 +80,7 @@ public class PlayPreparationDialog extends JFrame implements ActionListener {
         buildGUI();
         pack();
         setVisible( true );
-//        RefineryUtilities.positionDialogRelativeToParent(this,1,1);
+        //        RefineryUtilities.positionDialogRelativeToParent(this,1,1);
 
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -101,7 +115,7 @@ public class PlayPreparationDialog extends JFrame implements ActionListener {
         final JPanel thePanel = new JPanel();
         thePanel.setLayout( new GridBagLayout() );
         final GridBagConstraints theCons = DomGui.getGridBagConstraints( 2 );
-//        theCons.anchor=GridBagConstraints.WEST;
+        //        theCons.anchor=GridBagConstraints.WEST;
         theCons.weightx=1;
         thePanel.add(new JLabel("Game Log Delay"),theCons);
         myDelayTXF = new JTextField("100");
@@ -261,8 +275,9 @@ public class PlayPreparationDialog extends JFrame implements ActionListener {
             DomPlayer theHumanPlayer = new DomPlayer("Human");
             theHumanPlayer.setHuman();
             if (!theHumanPlayer.addBoard(myBoardField.getText(),myBaneField.getText(),"0","", "false")) {
-              JOptionPane.showMessageDialog(this, "An error was found in the Board and/or Bane", "Error", JOptionPane.ERROR_MESSAGE);
-              return;
+                JOptionPane.showMessageDialog(this, "An error was found in the Board and/or Bane", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
             }
             int j = 0;
             for (Enumeration<AbstractButton> theEnum = myBTNGroup.getElements(); theEnum.hasMoreElements(); j++) {

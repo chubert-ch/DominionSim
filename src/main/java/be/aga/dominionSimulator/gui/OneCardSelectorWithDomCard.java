@@ -1,20 +1,37 @@
 package be.aga.dominionSimulator.gui;
 
-import be.aga.dominionSimulator.DomCard;
-import be.aga.dominionSimulator.gui.util.CardRenderer;
-
-import javax.swing.*;
-import javax.swing.border.TitledBorder;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.WindowConstants;
+import javax.swing.border.TitledBorder;
+
+import be.aga.dominionSimulator.DomCard;
+import be.aga.dominionSimulator.gui.util.CardRenderer;
+
 public class OneCardSelectorWithDomCard extends JDialog implements ActionListener {
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = -2763092423371435334L;
+     * 
+     */
+    private static final long serialVersionUID = -2763092423371435334L;
     private final ArrayList<DomCard> myChooseFrom;
     private final String myButtonMessage;
     private DomCard myChosenCard;
@@ -81,7 +98,7 @@ public class OneCardSelectorWithDomCard extends JDialog implements ActionListene
 
     private JList<DomCard> getChooseFromList() {
         myChooseFromList = new JList<DomCard>();
-//    myChooseFromList.setPreferredSize(new Dimension(100,200));
+        //    myChooseFromList.setPreferredSize(new Dimension(100,200));
         myChooseFromList.setCellRenderer(new CardRenderer<DomCard>());
         myChooseFromList.setModel(new DefaultListModel<DomCard>());
         for (DomCard theCard:myChooseFrom)

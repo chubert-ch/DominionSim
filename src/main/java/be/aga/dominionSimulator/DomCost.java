@@ -5,7 +5,7 @@ package be.aga.dominionSimulator;
  */
 public class DomCost implements Comparable< DomCost >{
 
-    public static final DomCost ZERO = new DomCost( 0, 0 );
+    public static final DomCost ZERO = new DomCost(0, 0);
     int coins = 0;
     int potions = 0;
     int debt = 0;
@@ -72,13 +72,13 @@ public class DomCost implements Comparable< DomCost >{
     /* (non-Javadoc)
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
-    public int compareTo( DomCost aO ) {
-    	//CAREFUL when using this!!
-    	//the cost of King's Court for example will be smaller then the cost of Transmute
-    	//and the cost of Transmute will also be smaller than the cost of King's Court! 
+    public int compareTo(DomCost aO) {
+        //CAREFUL when using this!!
+        //the cost of King's Court for example will be smaller then the cost of Transmute
+        //and the cost of Transmute will also be smaller than the cost of King's Court! 
         if (this.coins<aO.getCoins() || this.potions<aO.getPotions() || this.debt<aO.getDebt() )
-           return -1;
-        
+            return -1;
+
         if (this.coins==aO.getCoins() && this.potions==aO.getPotions() && this.debt==aO.getDebt())
             return 0;
 
@@ -89,25 +89,25 @@ public class DomCost implements Comparable< DomCost >{
      * Returns new {@code DomCost} representing the addition of this cost and {@code aCostToAdd}.
      * @return DomCost that is addition of this and argument
      */
-    public DomCost add( DomCost aCostToAdd ) {
-      DomCost theNewCost = new DomCost(  coins + aCostToAdd.coins, potions + aCostToAdd.potions );
-      theNewCost.setDebt(debt + aCostToAdd.getDebt());
-//      if (theNewCost.compareTo(ZERO)<0)
-//    	  theNewCost=ZERO;
-      return theNewCost; 
+    public DomCost add(DomCost aCostToAdd) {
+        DomCost theNewCost = new DomCost(coins + aCostToAdd.coins, potions + aCostToAdd.potions);
+        theNewCost.setDebt(debt + aCostToAdd.getDebt());
+        //      if (theNewCost.compareTo(ZERO)<0)
+        //    	  theNewCost=ZERO;
+        return theNewCost;
     }
 
-	public DomCost subtract(DomCost aCostToSubtract) {
-	      DomCost theNewCost = new DomCost(  coins - aCostToSubtract.coins, potions - aCostToSubtract.potions );
-          theNewCost.setDebt(debt - aCostToSubtract.getDebt());
-//	      if (theNewCost.compareTo(ZERO)<0)
-//	    	  theNewCost=ZERO;
-	      return theNewCost; 
-	}
+    public DomCost subtract(DomCost aCostToSubtract) {
+        DomCost theNewCost = new DomCost(coins - aCostToSubtract.coins, potions - aCostToSubtract.potions);
+        theNewCost.setDebt(debt - aCostToSubtract.getDebt());
+        //	      if (theNewCost.compareTo(ZERO)<0)
+        //	    	  theNewCost=ZERO;
+        return theNewCost;
+    }
 
     @Override
     public String toString() {
-        return "$"+getCoins()+ (getPotions()>0 ? "P" : "");
+        return "$" + getCoins() + (getPotions() > 0 ? "P" : "");
     }
 
     public int compareButIgnoreDebtTo(DomCost aO) {

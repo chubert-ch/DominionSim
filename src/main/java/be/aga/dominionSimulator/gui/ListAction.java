@@ -1,7 +1,14 @@
 package be.aga.dominionSimulator.gui;
 
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+import javax.swing.Action;
+import javax.swing.InputMap;
+import javax.swing.JList;
+import javax.swing.KeyStroke;
 
 /*
  *	Add an Action to a JList that can be invoked either by using
@@ -16,73 +23,68 @@ import javax.swing.*;
  */
 public class ListAction implements MouseListener
 {
-	private static final KeyStroke ENTER = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
+    private static final KeyStroke ENTER = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
 
-	private JList<?> list;
-	private KeyStroke keyStroke;
+    private JList<?> list;
+    private KeyStroke keyStroke;
 
-	/*
-	 *	Add an Action to the JList bound by the default KeyStroke
-	 */
-	public ListAction(JList<?> list, Action action)
-	{
-		this(list, action, ENTER);
-	}
+    /*
+     * Add an Action to the JList bound by the default KeyStroke
+     */
+    public ListAction(JList<?> list, Action action) {
+        this(list, action, ENTER);
+    }
 
-	/*
-	 *	Add an Action to the JList bound by the specified KeyStroke
-	 */
-	public ListAction(JList<?> list, Action action, KeyStroke keyStroke)
-	{
-		this.list = list;
-		this.keyStroke = keyStroke;
+    /*
+     * Add an Action to the JList bound by the specified KeyStroke
+     */
+    public ListAction(JList<?> list, Action action, KeyStroke keyStroke) {
+        this.list = list;
+        this.keyStroke = keyStroke;
 
-		//  Add the KeyStroke to the InputMap
+        //  Add the KeyStroke to the InputMap
 
-		InputMap im = list.getInputMap();
-		im.put(keyStroke, keyStroke);
+        InputMap im = list.getInputMap();
+        im.put(keyStroke, keyStroke);
 
-		//  Add the Action to the ActionMap
+        //  Add the Action to the ActionMap
 
-		setAction( action );
+        setAction(action);
 
-		//  Handle mouse double click
+        //  Handle mouse double click
 
-		list.addMouseListener( this );
-	}
+        list.addMouseListener(this);
+    }
 
-	/*
-	 *  Add the Action to the ActionMap
-	 */
-	public void setAction(Action action)
-	{
-		list.getActionMap().put(keyStroke, action);
-	}
+    /*
+     * Add the Action to the ActionMap
+     */
+    public void setAction(Action action) {
+        list.getActionMap().put(keyStroke, action);
+    }
 
-	//  Implement MouseListener interface
+    //  Implement MouseListener interface
 
-	public void mouseClicked(MouseEvent e)
-	{
-		if (e.getClickCount() == 2)
-		{
-			Action action = list.getActionMap().get(keyStroke);
+    public void mouseClicked(MouseEvent e) {
+        if (e.getClickCount() == 2) {
+            Action action = list.getActionMap().get(keyStroke);
 
-			if (action != null)
-			{
-				ActionEvent event = new ActionEvent(
-					list,
-					ActionEvent.ACTION_PERFORMED,
-					"");
-				action.actionPerformed(event);
-			}
-		}
-	}
+            if (action != null) {
+                ActionEvent event = new ActionEvent(list, ActionEvent.ACTION_PERFORMED, "");
+                action.actionPerformed(event);
+            }
+        }
+    }
 
- 	public void mouseEntered(MouseEvent e) {}
+    public void mouseEntered(MouseEvent e) {
+    }
 
-	public void mouseExited(MouseEvent e) {}
+    public void mouseExited(MouseEvent e) {
+    }
 
-	public void mousePressed(MouseEvent e) {}
+    public void mousePressed(MouseEvent e) {
+    }
 
-	public void mouseReleased(MouseEvent e) {}
+    public void mouseReleased(MouseEvent e) {
+    }
 }

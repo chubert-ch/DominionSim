@@ -8,26 +8,26 @@ import be.aga.dominionSimulator.gui.DomBotEditor;
 import be.aga.dominionSimulator.gui.DomBuyRulePanel;
 
 public class DomBuyRule {
-	private final DomCardName cardToBuy;
-	private ArrayList<DomBuyCondition> buyConditions=new ArrayList<DomBuyCondition>();
-	private DomPlayStrategy playStrategy=DomPlayStrategy.standard;
-	private DomCardName baneCard=null;
-	
-	public DomBuyRule(String aName, String aPlayStrategy, String aBane) {
-       cardToBuy = DomCardName.valueOf(aName);
-       if (aPlayStrategy!=null)
-         playStrategy = DomPlayStrategy.valueOf(aPlayStrategy);
-       if (aBane!=null)
-         baneCard = DomCardName.valueOf(aBane);
-	}
+    private final DomCardName cardToBuy;
+    private ArrayList<DomBuyCondition> buyConditions = new ArrayList<DomBuyCondition>();
+    private DomPlayStrategy playStrategy = DomPlayStrategy.standard;
+    private DomCardName baneCard = null;
 
-	public void addCondition(DomBuyCondition tmp) {
-		buyConditions.add(tmp);
-	}
+    public DomBuyRule(String aName, String aPlayStrategy, String aBane) {
+        cardToBuy = DomCardName.valueOf(aName);
+        if (aPlayStrategy != null)
+            playStrategy = DomPlayStrategy.valueOf(aPlayStrategy);
+        if (aBane != null)
+            baneCard = DomCardName.valueOf(aBane);
+    }
 
-	public ArrayList<DomBuyCondition> getBuyConditions() {
-		return buyConditions;
-	}
+    public void addCondition(DomBuyCondition tmp) {
+        buyConditions.add(tmp);
+    }
+
+    public ArrayList<DomBuyCondition> getBuyConditions() {
+        return buyConditions;
+    }
 
     /**
      * @return
@@ -44,50 +44,50 @@ public class DomBuyRule {
         return new DomBuyRulePanel(this, domBotEditor);
     }
 
-	public String getXML() {
+    public String getXML() {
         StringBuilder theXML = new StringBuilder();
         String newline = System.getProperty( "line.separator" );
         String theIndentation = "   ";
         theXML.append(theIndentation);
         theXML.append("<buy name=\"").append(getCardToBuy().name()).append("\"");
         if (getPlayStrategy()!=DomPlayStrategy.standard) {
-        	theXML.append(" strategy=\"").append(getPlayStrategy().name()).append("\"");
+            theXML.append(" strategy=\"").append(getPlayStrategy().name()).append("\"");
         }
         if (getBane()!=null) {
-        	theXML.append(" bane=\"").append(getBane().name()).append("\"");
+            theXML.append(" bane=\"").append(getBane().name()).append("\"");
         }
         if (getBuyConditions().isEmpty()) {
-        	theXML.append("/>").append(newline);
+            theXML.append("/>").append(newline);
         } else {
-        	theXML.append(">").append(newline);
+            theXML.append(">").append(newline);
             for (DomBuyCondition theCondition : getBuyConditions()){
-              theXML.append(theCondition.getXML(theIndentation));
+                theXML.append(theCondition.getXML(theIndentation));
             }
             theXML.append(theIndentation);
             theXML.append("</buy>").append(newline);
         }
-		return theXML.toString();
-	}
+        return theXML.toString();
+    }
 
-	public DomPlayStrategy getPlayStrategy() {
-		return playStrategy;
-	}
+    public DomPlayStrategy getPlayStrategy() {
+        return playStrategy;
+    }
 
-	public DomCardName getBane() {
-		return baneCard;
-	}
+    public DomCardName getBane() {
+        return baneCard;
+    }
 
-	public void setBaneCard(DomCardName aCardName) {
-		baneCard=aCardName;
-	}
+    public void setBaneCard(DomCardName aCardName) {
+        baneCard = aCardName;
+    }
 
-	public boolean wantsToBuyOrGainNow(DomPlayer owner) {
-		if (owner.getPossessor()!=null)
-			return wantsToBuyOrGainNow(owner.getPossessor());
-		for (DomBuyCondition buyCondition : getBuyConditions()){
-			if (!buyCondition.isTrue(owner))
-				return false;
-		}
-		return true;
-	}
+    public boolean wantsToBuyOrGainNow(DomPlayer owner) {
+        if (owner.getPossessor() != null)
+            return wantsToBuyOrGainNow(owner.getPossessor());
+        for (DomBuyCondition buyCondition : getBuyConditions()) {
+            if (!buyCondition.isTrue(owner))
+                return false;
+        }
+        return true;
+    }
 }
