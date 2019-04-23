@@ -46,6 +46,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
     private DomCard myZombieApprentice;
     private DomCard myZombieMason;
     private DomCard myZombieSpy;
+    private ArrayList<DomCard> druidBoons;
 
     public DomBoard ( Class< DomCardName > aKeyType, ArrayList< DomPlayer > aPlayers ) {
       super( aKeyType );
@@ -77,10 +78,23 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
             putAqueductTokensOnTreasures();
         resetBoons();
         resetHexes();
+        resetDruid();
+    }
+
+    private void resetDruid() {
+        if (get(DomCardName.Druid) == null)
+            return;
+        druidBoons = new ArrayList<DomCard>();
+        druidBoons.add(boons.remove(0));
+        druidBoons.add(boons.remove(0));
+        druidBoons.add(boons.remove(0));
     }
 
     private void resetBoons() {
+        if (druidBoons!=null)
+            boons.addAll(druidBoons);
         if (!boonsDiscard.isEmpty()) {
+            druidBoons = null;
             boons.addAll(boonsDiscard);
             boonsDiscard.clear();
             Collections.shuffle(boons);
@@ -307,6 +321,9 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
                 if (theCard == DomCardName.Devil$s_Workshop)
                     addSeparatePile(DomCardName.Imp, 13);
 
+                if (theCard == DomCardName.Leprechaun)
+                    addSeparatePile(DomCardName.Wish, 12);
+
                 if (theCard == DomCardName.Urchin)
                     addSeparatePile(DomCardName.Mercenary, 10);
                 if (theCard == DomCardName.Hermit)
@@ -333,6 +350,9 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
                 if (theCard.hasCardType(DomCardType.Fate)) {
                     createBoonsDeck();
                 }
+                if (theCard.hasCardType(DomCardType.Doom)) {
+                    createHexesDeck();
+                }
                 if (theCard==DomCardName.Shepherd) {
                     addCardPile(DomCardName.Pasture);
                 }
@@ -341,6 +361,31 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
                 }
                 if (theCard== DomCardName.Pixie) {
                     addCardPile(DomCardName.Goat);
+                }
+                if (theCard==DomCardName.Fool) {
+                    addCardPile(DomCardName.Lucky_Coin);
+                }
+                if (theCard==DomCardName.Cemetery) {
+                    addCardPile(DomCardName.Haunted_Mirror);
+                    addSeparatePile(DomCardName.Ghost, 6);
+                }
+                if (theCard==DomCardName.Exorcist) {
+                    addSeparatePile(DomCardName.Ghost, 6);
+                    addSeparatePile(DomCardName.Imp,13);
+                    addSeparatePile(DomCardName.Will_o$_Wisp,12);
+                }
+                if (theCard==DomCardName.Vampire) {
+                    addSeparatePile(DomCardName.Bat,10);
+                }
+                if (theCard== DomCardName.Secret_Cave) {
+                    addCardPile(DomCardName.Magic_Lamp);
+                    addSeparatePile(DomCardName.Wish, 12);
+                }
+                if (theCard==DomCardName.Tormentor){
+                    addSeparatePile(DomCardName.Imp,13);
+                }
+                if (theCard==DomCardName.Tracker){
+                    addCardPile(DomCardName.Pouch);
                 }
             }
         }
@@ -376,7 +421,6 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
                 hexes.add(theCard.createNewCardInstance());
         }
         Collections.shuffle(hexes);
-//        addSeparatePile(DomCardName.Will_o$_Wisp,12);
     }
 
     private void addSaunaPile() {
@@ -509,12 +553,14 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
 
     private void addRuinsPile() {
         put( DomCardName.Ruins, new ArrayList< DomCard >() );
-        for (int i=0;i<2;i++) {
-            get(DomCardName.Ruins).add(DomCardName.Abandoned_Mine.createNewCardInstance());
-            get(DomCardName.Ruins).add(DomCardName.Survivors.createNewCardInstance());
-            get(DomCardName.Ruins).add(DomCardName.Ruined_Market.createNewCardInstance());
-            get(DomCardName.Ruins).add(DomCardName.Ruined_Village.createNewCardInstance());
-            get(DomCardName.Ruins).add(DomCardName.Ruined_Library.createNewCardInstance());
+        for (int j = 0;j<players.size() - 1;j++) {
+            for (int i = 0; i < 2; i++) {
+                get(DomCardName.Ruins).add(DomCardName.Abandoned_Mine.createNewCardInstance());
+                get(DomCardName.Ruins).add(DomCardName.Survivors.createNewCardInstance());
+                get(DomCardName.Ruins).add(DomCardName.Ruined_Market.createNewCardInstance());
+                get(DomCardName.Ruins).add(DomCardName.Ruined_Village.createNewCardInstance());
+                get(DomCardName.Ruins).add(DomCardName.Ruined_Library.createNewCardInstance());
+            }
         }
         Collections.shuffle(get(DomCardName.Ruins));
     }
@@ -573,6 +619,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
         case Pasture:
         case Cursed_Gold:
         case Goat:
+        case Haunted_Mirror:
             theNumber=players.size();
             break;
 		default:
@@ -828,7 +875,7 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
 		for (DomCardName theCardName : keySet()){
 			if (get(theCardName)!=null
             && (theCardName.hasCardType(DomCardType.Kingdom) || theCardName.hasCardType(DomCardType.Base))
-		    && !get(theCardName).isEmpty() 
+		    && (!get(theCardName).isEmpty() && get(theCardName).get(0).getName()==theCardName)
 		    && (aType==null || theCardName.hasCardType(aType))
 		    && (aForbiddenType==null || !theCardName.hasCardType(aForbiddenType))
 		    && ((!anExactCost && domCost.customCompare(theCardName.getCost(aPlayer.getCurrentGame()))>=0)
@@ -1092,9 +1139,11 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
         if (DomEngine.haveToLog)
             DomEngine.addToLog(player +" receives "+theBoon);
         theBoon.play();
-        if (theBoon.getName()!= DomCardName.The_Field$s_Gift && theBoon.getName()!= DomCardName.The_Forest$s_Gift && theBoon.getName()!= DomCardName.The_River$s_Gift)
-            if (!boonsDiscard.contains(theBoon))
-              boonsDiscard.add(theBoon);
+        if (getDruidBoons()==null || !getDruidBoons().contains(aBoon)){
+            if (theBoon.getName() != DomCardName.The_Field$s_Gift && theBoon.getName() != DomCardName.The_Forest$s_Gift && theBoon.getName() != DomCardName.The_River$s_Gift)
+                if (!boonsDiscard.contains(theBoon))
+                    boonsDiscard.add(theBoon);
+        }
     }
 
     public void receiveHex(DomPlayer player, DomCard aHex) {
@@ -1110,10 +1159,12 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
         if (DomEngine.haveToLog)
             DomEngine.addToLog(player +" receives "+theHex);
         theHex.play();
+        hexesDiscard.add(theHex);
     }
 
     public void returnBoon(DomCard aBoon) {
-        boonsDiscard.add(aBoon);
+        if (!boonsDiscard.contains(aBoon))
+          boonsDiscard.add(aBoon);
     }
 
     public DomCard takeBoon() {
@@ -1136,5 +1187,9 @@ public class DomBoard extends EnumMap< DomCardName, ArrayList<DomCard> > {
                 theTopCards.add(get(theCard).get(0).getName());
         }
         return theTopCards;
+    }
+
+    public ArrayList<DomCard> getDruidBoons() {
+        return druidBoons;
     }
 }

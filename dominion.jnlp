@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <jnlp
-  codebase="http://users.telenet.be/jeroenaga/domsim"
+  codebase="http://users.telenet.be/jeroenaga"
   href="dominion.jnlp"  >  
   <information>
     <title>Geronimoo's Dominion Simulator</title>
@@ -19,7 +19,7 @@
       <all-permissions/>
   </security>
   <resources>
-    <j2se version="1.7+"/>
+    <j2se version="1.8+"/>
     <jar href="GeronimooDomSim.jar"/>
     <jar href="jfreechart-1.0.14.jar"/> 
     <jar href="jcommon-1.0.23.jar"/> 

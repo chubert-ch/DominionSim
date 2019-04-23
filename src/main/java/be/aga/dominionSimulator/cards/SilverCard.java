@@ -18,7 +18,11 @@ public class SilverCard extends DomCard {
 
     @Override
     public void play() {
-        super.play();
+        if (owner.isEnviousActive()) {
+            owner.addAvailableCoinsSilent(1);
+        } else {
+            owner.addAvailableCoinsSilent(2);
+        }
         if (owner.getMerchantsPlayed()>0) {
             if (DomEngine.haveToLog) DomEngine.addToLog(owner + " played " + owner.getMerchantsPlayed() + " Merchants");
             owner.addAvailableCoins(owner.getMerchantsPlayed());
@@ -29,7 +33,7 @@ public class SilverCard extends DomCard {
             if (owner.getCardsInHand().isEmpty())
                 return;
             if (owner.isHumanOrPossessedByHuman()) {
-                owner.setNeedsToUpdate();
+                owner.setNeedsToUpdateGUI();
                 ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
                 for (DomCard theCard : owner.getCardsInHand()) {
                     theChooseFrom.add(theCard.getName());
@@ -51,6 +55,15 @@ public class SilverCard extends DomCard {
                 }
             }
         }
+    }
+
+    @Override
+    public int getPlayPriority() {
+        if (owner.countInDeck(DomCardName.Magic_Lamp)>0
+                && !owner.getCardsFromHand(DomCardName.Magic_Lamp).isEmpty()
+                && owner.getCardsFromPlay(DomCardName.Silver).isEmpty())
+            return 5;
+        return super.getPlayPriority();
     }
 
     @Override

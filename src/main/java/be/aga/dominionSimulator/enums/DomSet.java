@@ -360,7 +360,28 @@ public enum DomSet {
             ,DomCardName.Blessed_Village
             ,DomCardName.Conclave
             ,DomCardName.Idol
-            ,DomCardName.Pixie}),
+            ,DomCardName.Pixie
+            ,DomCardName.Fool
+            ,DomCardName.Monastery
+            ,DomCardName.Leprechaun
+            ,DomCardName.Cemetery
+            ,DomCardName.Changeling
+            ,DomCardName.Cobbler
+            ,DomCardName.Druid
+            ,DomCardName.Exorcist
+            ,DomCardName.Faithful_Hound
+            ,DomCardName.Secret_Cave
+            ,DomCardName.Tracker
+            ,DomCardName.Tragic_Hero
+            ,DomCardName.Werewolf
+            ,DomCardName.Night_Watchman
+            ,DomCardName.Cursed_Village
+            ,DomCardName.Den_of_Sin
+            ,DomCardName.Guardian
+            ,DomCardName.Sacred_Grove
+            ,DomCardName.Skulk
+            ,DomCardName.Tormentor
+            ,DomCardName.Vampire}),
 
     Promo (new DomCardName[] {DomCardName.Black_Market
            ,DomCardName.Envoy
@@ -382,7 +403,17 @@ public enum DomSet {
            ,DomCardName.Province
            ,DomCardName.Colony
            }),
-   ;
+
+    Renaissance(new DomCardName[]{DomCardName.Priest
+            , DomCardName.Mountain_Village
+            , DomCardName.Scholar
+            , DomCardName.Experiment
+            , DomCardName.Seer
+            , DomCardName.Acting_Troupe
+            , DomCardName.Recruiter
+            , DomCardName.Silk_Merchant
+    }
+    );
    
    private final ArrayList< DomCardName> cards = new ArrayList< DomCardName>();
    

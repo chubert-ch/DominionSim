@@ -19,7 +19,7 @@ public class CatapultCard extends DomCard {
             return;
         DomCard theCardToTrash=null;
         if (owner.isHumanOrPossessedByHuman()) {
-            owner.setNeedsToUpdate();
+            owner.setNeedsToUpdateGUI();
             ArrayList<DomCardName> theChooseFrom = new ArrayList<DomCardName>();
             for (DomCard theCard : owner.getCardsInHand()) {
                 theChooseFrom.add(theCard.getName());
@@ -44,7 +44,7 @@ public class CatapultCard extends DomCard {
 
     @Override
     public int getTrashPriority() {
-        if (owner.countInDeck(DomCardName.Rocks)<3 && owner.getCurrentGame().countInSupply(DomCardName.Rocks)==0)
+        if (owner.countInDeck(DomCardName.Rocks)<4 && owner.getCurrentGame().countInSupply(DomCardName.Rocks)==0)
             return DomCardName.Silver.getTrashPriority()-1;
         return super.getTrashPriority();
     }

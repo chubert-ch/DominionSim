@@ -25,6 +25,7 @@ public class PixieCard extends DomCard {
                 if (owner.getCardsInHand().get(0).getTrashPriority() <= DomCardName.Copper.getTrashPriority())
                     owner.receiveBoon(theBoon);
                 owner.trash(owner.removeCardFromPlay(this));
+                return;
             }
             Collections.sort(owner.getCardsInHand(), SORT_FOR_TRASHING);
             if (owner.getCardsInHand().get(0).getTrashPriority() <= DomCardName.Copper.getTrashPriority()
@@ -41,12 +42,11 @@ public class PixieCard extends DomCard {
     }
 
     private void handleHuman(DomCard aBoon) {
+        owner.setNeedsToUpdateGUI();
         if (owner.getEngine().getGameFrame().askPlayer("<html>Receive " + aBoon +" twice ?</html>", "Resolving " + this.getName().toString())) {
             owner.receiveBoon(aBoon);
             owner.receiveBoon(aBoon);
             owner.trash(owner.removeCardFromPlay(this));
         }
-
-
     }
 }

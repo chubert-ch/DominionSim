@@ -14,7 +14,7 @@ public class NecromancerCard extends DomCard {
     }
 
     public void play() {
-        owner.setNeedsToUpdate();
+        owner.setNeedsToUpdateGUI();
         DomCard theChosenCard;
         boolean chooseNonTerminal=false;
         if (owner.getActionsLeft()==0 && !owner.getCardsFromHand(DomCardType.Action).isEmpty())
@@ -36,11 +36,13 @@ public class NecromancerCard extends DomCard {
         ArrayList<DomCard> theActions = new ArrayList<DomCard>();
         for (DomCard theCard : owner.getCurrentGame().getTrashedCards()) {
             if (theCard.hasCardType(DomCardType.Action) && !theCard.hasCardType(DomCardType.Duration) && !owner.getCurrentGame().getFaceDownCardsInTrash().contains(theCard)){
+               if (theCard.getName()==DomCardName.Death_Cart)
+                   return theCard;
                theActions.add(theCard);
                theCard.setOwner(owner);
             }
         }
-        Collections.sort(theActions,SORT_FOR_PLAYING);
+        Collections.sort(theActions,SORT_FOR_DISCARDING_REVERSE);
         for (DomCard theCard:theActions) {
             if (theCard.wantsToBePlayed()) {
                 theCard.setOwner(null);

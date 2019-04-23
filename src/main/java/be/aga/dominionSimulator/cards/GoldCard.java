@@ -10,6 +10,24 @@ public class GoldCard extends DomCard {
     }
 
     @Override
+    public void play() {
+        if (owner.isEnviousActive()) {
+            owner.addAvailableCoinsSilent(1);
+        } else {
+            owner.addAvailableCoinsSilent(3);
+        }
+    }
+
+    @Override
+    public int getPlayPriority() {
+        if (owner.countInDeck(DomCardName.Magic_Lamp)>0
+                && !owner.getCardsFromHand(DomCardName.Magic_Lamp).isEmpty()
+                && owner.getCardsFromPlay(DomCardName.Gold).isEmpty())
+            return 5;
+        return super.getPlayPriority();
+    }
+
+    @Override
     public void doWhenGained() {
         if (owner.getCurrentGame().getBoard().isLandmarkActive(DomCardName.Aqueduct))
             owner.getCurrentGame().getBoard().moveVPFromTo(this.getName(),DomCardName.Aqueduct);
